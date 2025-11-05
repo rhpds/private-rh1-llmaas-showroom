@@ -2,6 +2,7 @@
 
 [#maas_introduction]
 = Setting Up Model-as-a-Service Infrastructure
+* The content needs to be updated for multi tenant.
 
 == Introduction: The Hidden Cost of Infrastructure-as-a-Service
 
