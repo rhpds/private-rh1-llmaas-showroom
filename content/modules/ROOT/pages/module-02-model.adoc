@@ -16,7 +16,7 @@ Let's get connected.
 **Open the OpenShift AI Dashboard**
 
 * Click to open the following URL in a new tab or window and log in:
-** https://data-science-gateway.{openshift_cluster_ingress_domain}/[https://rhods-dashboard-redhat-ods-applications.{openshift_cluster_ingress_domain}/,window=_blank]
+** https://data-science-gateway.{openshift_cluster_ingress_domain}/[https://data-science-gateway.{openshift_cluster_ingress_domain}/,window=_blank]
 
 NOTE: At any point, you can access the OpenShift Container Platform web console by going to the following URL: https://console-openshift-console.{openshift_cluster_ingress_domain}/[https://console-openshift-console.{openshift_cluster_ingress_domain}/,window=_blank]. 
 
