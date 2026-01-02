@@ -1,5 +1,5 @@
 :imagesdir: ../assets/images
-= Private LLM as a Service - A Practical Introduction with OpenShift AI
+= Private Model as a Service - A Practical Introduction with Red Hat AI
 
 == Step into the world of enterprise Generative AI deployment - one role at a time!
 
@@ -7,7 +7,7 @@
 
 This isn't a simple tutorial, this is the beginning of an adventure into the command center of an AI-powered enterprise!
 
-In this hands-on session, you will rotate between key personas critical to delivering modern, production-level AI services:
+In this hands-on session, you will rotate between key personas critical to delivering modern, AI-infused, production-level enterprise services:
 
 * As a **platform engineer** you will design and deploy model serving environments and prepare the infrastructure that makes scalable model hosting possible.
 

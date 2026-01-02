@@ -1,129 +1,87 @@
 :imagesdir: ../assets/images
 
 [#model-deployment]
-= Deploying and Inspecting Your First Foundation Model
+= Introduction to your environment
 
-Your first task as a platform engineer begins: standing up an enterprise-ready model on OpenShift AI. 
+Our first step is to get accustomed to our environment and its components. 
 
-== Getting connected to OpenShift AI
+Our home base will be our OpenShift cluster web console:
 
-// If you are accessing these instructions through the workshop, the information below will render properly with unique values. If you are accessing the instructions separately for your own cluster, you will see placeholder values instead.
+// NOTE: If you are accessing these instructions through our Red Hat Demo Platform workshop, the information below will render properly with unique values. If you are accessing the instructions separately for your own cluster, from the GitHub repository, you will instead see placeholder values.
 
-As a platform engineer, you're now stepping into a live environment! OpenShift AI provides a web-based dashboard interface to deploy and manage models with ease. 
+URL: https://console-openshift-console.{openshift_cluster_ingress_domain}/[https://console-openshift-console.{openshift_cluster_ingress_domain}/,window=_blank]. 
+
+From here, we will navigate to and between the following environments throughout our workshop:
+
+* Cluster Argo CD
+** View our gitops application deployments. This may be useful if you need to check the health of any of our apps.
+* Grafana
+** A dashboard interface that will show us model usage metrics.
+* Red Hat OpenShift AI
+** Where we will view and manage our model deployments and other MLOps/LLMOps tasks and agentic resources.
+* Red Hat OpenShift Dev Spaces
+** Where we will go into our developer persona and leverage our model as a service setup for coding tasks.
+
+You may find and go to these locations via our navigation button in the web console:
+
+image::apps_menu.png[]
+
+Now that you know how to get around, your adventure begins!
+
+== View model deployment
+
+OpenShift AI provides a web-based dashboard interface to deploy and manage models with ease, at scale and in conjunction with other critical AI assets like MCP servers or evaluation tooling.
 
 Let's get connected.
 
 **Open the OpenShift AI Dashboard**
 
-* Click to open the following URL in a new tab or window and log in:
-** https://data-science-gateway.{openshift_cluster_ingress_domain}/[https://data-science-gateway.{openshift_cluster_ingress_domain}/,window=_blank]
+Click the navigation button and select **Red Hat OpenShift AI** from the drop-down menu.
 
-NOTE: At any point, you can access the OpenShift Container Platform web console by going to the following URL: https://console-openshift-console.{openshift_cluster_ingress_domain}/[https://console-openshift-console.{openshift_cluster_ingress_domain}/,window=_blank]. 
+image::nav-rhoai.png[]
 
-* Click on the `Login with OpenShift` button:
-+
-[.bordershadow]
-image::02/02-01-login3.png[width="50%"]
+If prompted, login again with your user credentials to the OpenShift AI dashboard.
 
-* Enter your credentials:
-** Your username: `{user}`
-** Your password: `{password}`
+Once authenticated you will see the following home page:
 
-+
-[.bordershadow]
-image::02/02-01-login1.png[width="50%"]
+image::rhoai-dashboard.png[]
 
-* After you authenticate, your browser window should look like:
-+
-[.bordershadow]
-image::02/02-01-rhoai-front-page.png[width="75%"]
+Now, go to the GenAI Studio section of the dashboard and select `AI asset endpoints`.
 
-You're now inside the control panel that data scientists and ML engineers use daily. Let's explore what's under the hood.
+image::nav-genaistudio.png[]
 
-[#openshift-ai-overview]
-== OpenShift AI Overview 
+In the AI asset endpoints page, change the project from `grafana` to `Workspace userx` with x equal to your assigned user number.
 
-Think of this as your toolbox. Each component maps to a key responsibility in operating an enterprise-ready AI platform.
+image::genaistudio-changeproject.png[]
 
-* As you are cluster admin, you currently see many projects. The one we will be using in the workshop is the `LLM Host` project. To access it, click on `Go to Data Science Projects` at the bottom of the Data Science Projects section.
+Now you may view your available asset endpoints.
 
-[.bordershadow]
-image::02/02-got-to-dsp.png[width="50%"]
+You will not see any available models under the `Models` tab. Why? Because you do not have a model deployed in this namespace. 
 
-* In search filter type in `LLM Host` to find the LLM Host project. Click to access the project.
+We do, however, have a model deployed in a separate namespace managed by our cluster admin. This admin has set up a `Model as a Service` archiecture for our organization, with a central model deployed and managed, available for use by disparate teams. 
 
-image::02/search-llm-host.png[width="50%"]
+We will not be able to manage the model deployment with our simple user privileges, but we can access its endpoint information for use via the `Models as a service` tab. 
 
-[.bordershadow]
-image::02/02-project-tabs.png[width="50%"]
+image::maas-tab.png[]
 
-Once inside the project, explore the tabs across the top. Here's a quick rundown:
+Select the tab. You will see we have one model deployed: `qwen-4b-instruct`
 
-* **Workbenches**: Where you can create and manage various development environments like JupyterLab, VSCode, or other custom Workbenches. It provides a user-friendly interface for data scientists to work with notebooks, libraries, and datasets.
-* **Pipelines**: You may use pipelines to automate the process of processing data or training and deploying machine learning models.
-* **Models**: Where you can manage and deploy machine learning models. You can create, update, and delete models, as well as monitor their performance and usage.
-* **Cluster storage**: Here you can manage the storage resources used by your models and workbenches. You can create, update, and delete storage resources, as well as monitor their usage.
-* **Connections**: This is where you can manage the connections between your workbenches or model runtimes and other services, such as storage (S3), databases or APIs. You can create, update, and delete connections, as well as see which environment is using them.
-* **Permissions**: This is where you can manage the permissions for project. You can create, update, and delete permissions, as well as see which users or groups have access to which resources.
+image::maas-model.png[]
 
-[#reviewing-deployed-model]
-== Reviewing the Deployed Model
+We need the endpoint for the next section. Select `View` under the `External endpoint` column:
 
-You're not going to build from scratch just yet. You're here to learn how a working deployment is structured. 
+image::view-endpoint.png[]
 
-Step into the `Models` tab:
+Copy the MaaS route into a separate note file on your computer.
 
-[.bordershadow]
-image::02/02-granite-model-overview.png[width="75%"]
+image::copy-route.png[]
 
-Here you'll find the `Granite` model already deployed. This model is designed to generate human-like text and can be used for various natural language processing tasks.
+Now, click `Generate an API token`.
 
+image::generate-token.png[]
 
-* Click on the expand button at the left of the model to see more information about its configuration, such as the resources allocated to it.
-+
-[.bordershadow]
-image::02/02-granite-details.png[width="75%"]
+Copy this value alongside your route endpoint.
 
-* If you click on `Internal endpoint details`, you will see the different endpoints available for the model.
-+
-[.bordershadow]
-image::02/02-granite-endpoints.png[width="50%"]
+image::copy-token.png[]
 
-The model is **internal-only**, perfect for protected inference behind a gateway!
-
-=== Reviewing the Connection
-
-Next, switch to the `Connections` tab. You will see three connections. We will focus on the first two for `granite-3.2-8b-instruct` and `llama-guard-3-1b` with URI connections.
-
-[.bordershadow]
-image::02/02-connections-models-overview.png[width="75%"]
-
-Let's take a look at the `granite-3.2-8b-instruct` configuration. Click on the three dots on the right of the connection and select `Edit`.
-
-[.bordershadow]
-image::02/02-models-connection-edit.png[width="75%"]
-
-This connection links to a model that we will be using in our environment. Think of it like telling the system "here's where my model lives, and here's what I want to call it inside this platform". 
-
-[.bordershadow]
-image::02/02-models-connection-details.png[width="50%"]
-
-NOTE: We are using a model car image for both the **Granite** and **Llama Guard** models. A model car is like a container image for AI models. It packages the model weights, plus everything else needed to run the model reliably. By using this image from quay, we can easily pull down and deploy Granite without the need for extra setup. You may also point to internal storage or an internal container registry instead of the Quay.io location.
-
-Exit out of the `Edit` view by clicking `Cancel` or the `X` in the top right corner.
-
-image::02/02-exit-connection-edit.png[width="50%"]
-
-**Why does this matter?**
-
-As a platform engineer, URI connections give you the flexibility to deploy models from various sources - whether that's public registries like Quay.io, internal container registries, or even remote model repositories. This approach eliminates the need to manage large model files in object storage, reduces storage costs, and simplifies model deployment by treating models like any other containerized application. You can version, update, and rollback models just like you would with regular container images.
-
-== Recap: What you just did
-
-You acted as a platform engineer managing an internal LLM deployment:
-
-* Explored the OpenShift AI dashboard and project structure
-* Reviewed a live Granite model deployment and its configuration
-* Inspected URI-based connections that link to containerized models
-
-This foundational experience is critical before exposing models externally, which is exactly what you'll do next using an API Gateway.
+Now that we have our model connection details, we can proceed to our development environment to leverage the model. 
