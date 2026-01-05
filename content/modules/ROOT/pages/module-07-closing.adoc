@@ -1,0 +1,20 @@
+:imagesdir: ../assets/images
+[#closing-summary]
+= Closing Summary
+
+Over the course of this hands-on workshop, you experienced how generative AI and agentic systems can be:
+
+* Deployed and secured
+* Exposed as scalable services
+* Integrated into real workflows
+* Observed and monitored for impact
+
+All within an enterprise-ready OpenShift AI environment.
+
+== What's next
+
+Learn more in our `Resources` section.
+
+
+
+

@@ -1,0 +1,10 @@
+:imagesdir: ../assets/images
+[#resources]
+
+= Resources for further learning
+
+* https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/latest[OpenShift AI Documentation]
+* https://developers.redhat.com/products/openshift-dev-spaces/overview[Try Red Hat OpenShift Dev Spaces]
+* https://github.com/continuedev/continue[Continue GitHub Repository]
+* https://llama-stack.readthedocs.io/en/latest/[Llama Stack Documentation]
+* https://modelcontextprotocol.io/overview[Model Context Protocol (MCP)]

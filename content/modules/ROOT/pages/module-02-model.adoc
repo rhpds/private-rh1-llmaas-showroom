@@ -68,6 +68,8 @@ Select the tab. You will see we have one model deployed: `qwen-4b-instruct`
 
 image::maas-model.png[]
 
+// Test model in playground
+
 We need the endpoint for the next section. Select `View` under the `External endpoint` column:
 
 image::view-endpoint.png[]
