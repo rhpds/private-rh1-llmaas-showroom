@@ -1,57 +1,38 @@
 :imagesdir: ../assets/images
-= Private LLM as a Service - A Practical Introduction with OpenShift AI
+= Private Model as a Service - A Practical Introduction with Red Hat AI
 
-== Step into the world of enterprise Generative AI deployment - one role at a time!
-
-=== Welcome to the Workshop
+== Welcome to the Workshop
 
 This isn't a simple tutorial, this is the beginning of an adventure into the command center of an AI-powered enterprise!
 
-In this hands-on session, you will rotate between key personas critical to delivering modern, production-level AI services:
+In this hands-on session, you will rotate between key personas critical to delivering modern, AI-infused, production-level enterprise services:
 
-* As a **platform engineer** you will design and deploy model serving environments and prepare the infrastructure that makes scalable model hosting possible.
+* As a **developer**, you will access model credentials through a Model-as-a-Service interface and integrate AI code assistants into your development workflow. Then, you will connect real applications to private LLM endpoints, use code assistant technology to build applications, and leverage AI to enhance your coding productivity.
 
-* As an **AI application developer**, you will connect real applications to private LLM endpoints, integrate code assistant technology to build and deploy fun, and real-world, applications.
+* As a **DevOps Practitioner or Site Reliability Engineer**, you will explore the capabilities of agentic AI to monitor your OpenShift cluster resources and interact with collaboration tools.
 
-* As a **DevOps Practitioner**, you will then explore the capabilities of agentic AI to monitor your OpenShift cluster resources.
-
-* Lastly, as an **technical decision maker**, you will see how to monitor and analyze your model usage across the cluster. 
+* As a **technical decision maker or platform stakeholder**, you will monitor and analyze model usage across the cluster to understand cost, usage patterns, and business impact. 
 
 At the end, you will walk away with practical experience across the lifecycle of model deployment.
 
 == Workshop Agenda
 
-=== **Module 1:** Setting Up the AI Backbone
-Step into the role of platform engineer. You will see how to provision a scalable, secure Model-as-a-Service stack leveraging OpenShift AI - laying the necessary foundation for internal model hosting at scale.
+=== **Module 1:** Introduction to your environment and Model-as-a-Service Infrastructure
+As a developer, get acquainted with your OpenShift cluster environment and navigate to the OpenShift AI dashboard to view your model deployment and retrieve your endpoint and API token.
 
-=== **Module 2:** Activate the Code Assistant and Use AI to Enhance your Coding Skills
-Now, shift to the app developer's perspective. Connect to the model endpoint you deployed and then integrate it into a developer facing code assistant to help you develop for your work, bridging infrastructure and app logic.
+=== **Module 2:** AI-Assisted Development
+Set up OpenShift Dev Spaces, install an AI code assistant, and connect it to your private MaaS model endpoint to enhance your coding workflow.
 
-=== **Module 3:** Leverage the power of Agentic AI tooling
-With the mindset of a site reliability engineer, you'll use model context protocol (mcp) and the LlamaStack API to interact more easily with your openshift cluster.
+=== **Module 3:** Game Time
+Build a simple game using Continue's AI assistance. Explore, experiment, and build confidence with AI-assisted coding through a fun, low-pressure project.
 
-=== **Module 4:** Analytics
-Take on the role of a platform SRE or product owner responsible for understanding how your private LLM is being used, and whether it's operating effectively at scale by exploring model usage analytics. 
+=== **Module 4:** System Administration with Agentic AI
+With the mindset of a site reliability engineer or DevOps practitioner, use Model Context Protocol (MCP) servers and LlamaStack to interact with your OpenShift cluster and Slack workspace using natural language.
 
-=== **Module 5:** Reflect and Wrap-Up
-Assess what you've built. We'll close with key takeaways, architectural guidance, and patterns you can bring back to your organization.
+=== **Module 5:** Usage Analytics and Reporting
+Take on the role of a technical decision maker or platform stakeholder. Explore Grafana dashboards to monitor model usage, track costs, and understand the business impact of your AI services.
 
 == Workshop Environment
 
-For our workshop, we have provisioned an OpenShift Container Platform cluster for each participant, with Red Hat OpenShift AI deployed.
-
-Each person attending this lab has a full admin access (`cluster-admin`) to their cluster to be able to do some of the exercises requiring admin priveleges.
-
-== Embody the Role
-You’re not just here to observe—you’re here to build, test, and troubleshoot like the teams responsible for AI in production!
-
-At each phase, step into the persona, ask yourself:
-
-**“If I were responsible for this in a real enterprise, what would I do?”**
-
-**“What tooling do I need to trust this system at scale?”**
-
-**“How can I make this AI infrastructure repeatable, observable, and secure?”**
-
-Let's get started!
+For this workshop, you are in a shared OpenShift cluster environment with your own assigned user access. Each participant is sharing one model deployment.
 
