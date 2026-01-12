@@ -24,7 +24,7 @@ From here, we will navigate to and between the following environments throughout
 
 You may find and go to these locations via our navigation button in the web console:
 
-image::apps_menu.png[]
+image::apps-menu.png[]
 
 Now that you know how to get around, your adventure begins!
 
