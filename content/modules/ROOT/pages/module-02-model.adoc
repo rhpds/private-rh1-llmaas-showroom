@@ -11,6 +11,9 @@ Our home base will be our OpenShift cluster web console:
 
 URL: https://console-openshift-console.{openshift_cluster_ingress_domain}/[https://console-openshift-console.{openshift_cluster_ingress_domain}/,window=_blank]. 
 
+Use the following user credentials:
+({user}/{password})
+
 From here, we will navigate to and between the following environments throughout our workshop:
 
 * Cluster Argo CD
