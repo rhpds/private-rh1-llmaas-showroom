@@ -11,6 +11,9 @@ Our home base will be our OpenShift cluster web console:
 
 URL: https://console-openshift-console.{openshift_cluster_ingress_domain}/[https://console-openshift-console.{openshift_cluster_ingress_domain}/,window=_blank]. 
 
+Use the following user credentials:
+({user}/{password})
+
 From here, we will navigate to and between the following environments throughout our workshop:
 
 * Cluster Argo CD
@@ -24,7 +27,7 @@ From here, we will navigate to and between the following environments throughout
 
 You may find and go to these locations via our navigation button in the web console:
 
-image::apps_menu.png[]
+image::apps-menu.png[]
 
 Now that you know how to get around, your adventure begins!
 
@@ -58,7 +61,7 @@ Now you may view your available asset endpoints.
 
 You will not see any available models under the `Models` tab. Why? Because you do not have a model deployed in this namespace. 
 
-We do, however, have a model deployed in a separate namespace managed by our cluster admin. This admin has set up a `Model as a Service` archiecture for our organization, with a central model deployed and managed, available for use by disparate teams. 
+We do, however, have a model deployed in a separate namespace managed by our cluster admin. This admin has set up a `Model as a Service` architecture for our organization, with a central model deployed and managed, available for use by disparate teams. 
 
 We will not be able to manage the model deployment with our simple user privileges, but we can access its endpoint information for use via the `Models as a service` tab. 
 
