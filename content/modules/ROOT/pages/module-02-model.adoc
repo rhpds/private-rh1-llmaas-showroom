@@ -58,7 +58,7 @@ Now you may view your available asset endpoints.
 
 You will not see any available models under the `Models` tab. Why? Because you do not have a model deployed in this namespace. 
 
-We do, however, have a model deployed in a separate namespace managed by our cluster admin. This admin has set up a `Model as a Service` archiecture for our organization, with a central model deployed and managed, available for use by disparate teams. 
+We do, however, have a model deployed in a separate namespace managed by our cluster admin. This admin has set up a `Model as a Service` architecture for our organization, with a central model deployed and managed, available for use by disparate teams. 
 
 We will not be able to manage the model deployment with our simple user privileges, but we can access its endpoint information for use via the `Models as a service` tab. 
 
