@@ -1,5 +1,5 @@
 name: modules
-title: Private LLM as a Service - A Practical Introduction with OpenShift AI
+title: Private Models-as-a-Service - A Practical Introduction with Red Hat AI
 version: main
 nav:
   - modules/ROOT/nav.adoc
@@ -10,7 +10,7 @@ asciidoc:
     page-pagination: true
     experimental:
     numbered:
-    lab_name: "Private LLM as a Service - A Practical Introduction with OpenShift AI"
+    lab_name: "Private Models-as-a-Service - A Practical Introduction with Red Hat AI"
     guid: my-guid
     ssh_user: lab-user
     ssh_password: lab-user
@@ -18,7 +18,7 @@ asciidoc:
     minio-user: minio
     minio-pass: minio123
     minio-endpoint: http://minio.shared-minio.svc.cluster.local:9000/
-    git-clone-repo-url: https://github.com/rhpds/private-summit-llmaas-showroom.git
+    git-clone-repo-url: https://github.com/rhpds/private-rh1-llmaas-showroom.git
     git-clone-repo-branch: main
     user: user1
     password: openshift
