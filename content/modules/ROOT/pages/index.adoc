@@ -17,7 +17,7 @@ At the end, you will walk away with practical experience across the lifecycle of
 
 == Workshop Agenda
 
-=== **Module 1:** Introduction to your environment and Model-as-a-Service Infrastructure
+=== **Module 1:** Introduction to your environment and Models-as-a-Service Infrastructure
 As a developer, get acquainted with your OpenShift cluster environment and navigate to the OpenShift AI dashboard to view your model deployment and retrieve your endpoint and API token.
 
 === **Module 2:** AI-Assisted Development
@@ -27,7 +27,7 @@ Set up OpenShift Dev Spaces, install an AI code assistant, and connect it to you
 Build a simple game using Continue's AI assistance. Explore, experiment, and build confidence with AI-assisted coding through a fun, low-pressure project.
 
 === **Module 4:** System Administration with Agentic AI
-With the mindset of a site reliability engineer or DevOps practitioner, use Model Context Protocol (MCP) servers and LlamaStack to interact with your OpenShift cluster and Slack workspace using natural language.
+With the mindset of a site reliability engineer or DevOps practitioner, use Model Context Protocol (MCP) servers and Llama Stack to interact with your OpenShift cluster and Slack workspace using natural language.
 
 === **Module 5:** Usage Analytics and Reporting
 Take on the role of a technical decision maker or platform stakeholder. Explore Grafana dashboards to monitor model usage, track costs, and understand the business impact of your AI services.

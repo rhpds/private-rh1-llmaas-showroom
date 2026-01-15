@@ -24,7 +24,7 @@ From here, we will navigate to and between the following environments throughout
 
 You may find and go to these locations via our navigation button in the web console:
 
-image::apps_menu.png[]
+image::apps-menu.png[]
 
 Now that you know how to get around, your adventure begins!
 
@@ -46,7 +46,7 @@ Once authenticated you will see the following home page:
 
 image::rhoai-dashboard.png[]
 
-Now, go to the GenAI Studio section of the dashboard and select `AI asset endpoints`.
+Now, go to the `Gen AI Studio` section of the dashboard and select `AI asset endpoints`.
 
 image::nav-genaistudio.png[]
 
@@ -58,7 +58,7 @@ Now you may view your available asset endpoints.
 
 You will not see any available models under the `Models` tab. Why? Because you do not have a model deployed in this namespace. 
 
-We do, however, have a model deployed in a separate namespace managed by our cluster admin. This admin has set up a `Model as a Service` archiecture for our organization, with a central model deployed and managed, available for use by disparate teams. 
+We do, however, have a model deployed in a separate namespace managed by our cluster admin. This admin has set up a `Models as a Service` architecture for our organization, with a central model deployed and managed, available for use by disparate teams. 
 
 We will not be able to manage the model deployment with our simple user privileges, but we can access its endpoint information for use via the `Models as a service` tab. 
 
@@ -78,7 +78,7 @@ Copy the MaaS route into a separate note file on your computer.
 
 image::copy-route.png[]
 
-Now, click `Generate an API token`.
+Now, click `Generate API token`.
 
 image::generate-token.png[]
 

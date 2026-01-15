@@ -19,7 +19,7 @@ You only need to pick one - but feel free to try more if you have time.
 
 From the file explorer, navigate to the `game_starters` directory:
 
-image:code/game_starters.png[width="50%"]
+image::game_starters.png[width="50%"]
 
 Open the game file of your preference, in the language of your choice.
 
@@ -29,13 +29,13 @@ The top half of the file includes working game code. The bottom half of the file
 
 Once you have opened the file you wish to work on, click the `Continue` extension tab again on the left-hand side of the VS Code window. You may toggle between the `Explorer` and `Continue` tabs as you need.
 
-image::code/toggle_sidebar.png[width="10%"]
+image::toggle_sidebar.png[width="10%"]
 
 === How to Use Continue
 
 You may use the chat interface function to ask any questions about your code. To interact directly with the code itself, you will need to `highlight` and `right-click` on whatever parts of the code you'd like to work on. When you right-click, you will then click on `Continue` in the pop-up menu:
 
-image::code/continue_popup.png[width="50%"]
+image::continue_popup.png[width="50%"]
 
 Here is a short description of each of the Continue options so that you will understand how to use them properly:
 
@@ -128,7 +128,7 @@ Use the execution instructions in the above sections to run the code for any of 
 
 You've now used Continue in a real, yet low-pressure, context - scaffolding, editing, testing and debugging a working application!
 
-In the next activity, we'll bring our new set of skills to deploying an MCP server into our cluster for our organization.
+In the next activity, we'll set up an agentic system in our Red Hat AI cluster.
 
 
 

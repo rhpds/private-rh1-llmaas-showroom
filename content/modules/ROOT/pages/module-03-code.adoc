@@ -3,7 +3,7 @@
 [#code-asst]
 = AI-Assisted Development
 
-Now that you have your model endpoint and API key, you can proceed to your work as an AI developer. Your organization leverages OpenShift Dev Spaces for your development team to develop and collaborate all in one OpenShift cluster. And now, you have been given access to a Model as a Service endpoint to enhance your work.
+Now that you have your model endpoint and API key, you can proceed to your work as an AI developer. Your organization leverages OpenShift Dev Spaces for your development team to develop and collaborate all in one OpenShift cluster. And now, you have been given access to a Models as a Service endpoint to enhance your work.
 
 == The impact of AI code assistants
 
@@ -91,12 +91,12 @@ NOTE: Expand the Continue app sidebar by dragging the border over.
 
 We will do two things in this module:
 
-**1.** Connect to our MaaS model within our company's MaaS platform
-**2.** Use our model's "brain" to help us understand and deploy a fun game, and then work on an impactful Kubernetes deployment.
+. Connect to our MaaS model within our company's MaaS platform
+. Use our model's "brain" to help us understand and deploy a fun game, and then work on an impactful Kubernetes deployment.
 
 In order to connect our model to the Continue code extension we must provide the extension our model's endpoint URL and API key from our MaaS application in the previous module.
 
-NOTE: If needed, go back to the OpenShift AI dashboard, within the AI asset endpoints section to retrieve the credentials.
+NOTE: If needed, go back to the OpenShift AI dashboard to the AI asset endpoints section to retrieve the credentials.
 
 === Enter MaaS endpoint details
 
@@ -131,11 +131,11 @@ context:
   - provider: codebase
 ----
 
-IMPORTANT: Replace the `apiBase` URL with your actual MaaS endpoint URL and `YOUR_API_KEY` with the API key from your MaaS application. 
+IMPORTANT: Replace the `apiBase` URL with your actual MaaS endpoint URL and `YOUR_API_KEY` with the API key from your MaaS application. Ensure you retain the `v1` at the end of the path.
 
 For example:
 
-* **apiBase**: `https://granite-model-maas.apps.example.com/llm/qwen3-4b-instruct/v1` (Ensure you retain the `v1` at the end of the URL)
+* **apiBase**: `https://granite-model-maas.apps.example.com/llm/qwen3-4b-instruct/v1` (Note the `v1` at the end of the URL)
 * **apiKey**: `your-actual-api-key-here`
 
 Reference the complete configuration documentation here: https://docs.continue.dev/reference[Continue Documentation]
