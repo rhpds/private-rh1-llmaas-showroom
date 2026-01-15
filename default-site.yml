@@ -1,6 +1,6 @@
 ---
 site:
-  title: Private LLM as a Service - A Practical Introduction with OpenShift AI
+  title: Private Models-as-a-Service - A Practical Introduction with Red Hat AI
   url: https://github.com/rhpds/private-rh1-llmaas-showroom
   start_page: modules::index.adoc
 
