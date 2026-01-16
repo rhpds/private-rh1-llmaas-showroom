@@ -9,7 +9,8 @@ Our home base will be our OpenShift cluster web console:
 
 // NOTE: If you are accessing these instructions through our Red Hat Demo Platform workshop, the information below will render properly with unique values. If you are accessing the instructions separately for your own cluster, from the GitHub repository, you will instead see placeholder values.
 
-URL: https://console-openshift-console.{openshift_cluster_ingress_domain}/[https://console-openshift-console.{openshift_cluster_ingress_domain}/,window=_blank]. 
+URL: https://console-openshift-console.{openshift_cluster_ingress_domain}/[https://console-openshift-console.{openshift_cluster_ingress_domain}/,window=_blank].
+* Login to OpenShift ({user}/{password}) 
 
 From here, we will navigate to and between the following environments throughout our workshop:
 
