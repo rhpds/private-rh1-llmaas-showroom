@@ -146,18 +146,18 @@ Now, let's post a message to our Slack workspace:
 
 [source,console,role=execute,subs=attributes+]
 ----
-Post a message to the #rh1-2025 channel: "Hi from <insert name>".
+Post a message to the #rh1-2026 channel: "Hi from <insert name>".
 ----
 
 ==== Send logs to Slack
 
 Now, let's try out a very real use case for this! It may not be done through a chat UI like this, but it's a good example of how you can use agentic AI to help you with your work. In a production environment, you would likely use a more robust automation to send logs or other information from your OpenShift cluster to Slack.
 
-Let's send the logs for the lsd-genai-playground pod to the #rh1-2025 channel.
+Let's send the logs for the lsd-genai-playground pod to the #rh1-2026 channel.
 
 [source,console,role=execute,subs=attributes+]
 ----
-Post the logs for the lsd-genai-playground pod in the wksp-user[x] namespace to the #rh1-2025 channel in Slack.
+Post the logs for the lsd-genai-playground pod in the wksp-user[x] namespace to the #rh1-2026 channel in Slack.
 ----
 
 == Summary: What You Did
