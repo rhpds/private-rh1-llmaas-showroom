@@ -43,4 +43,4 @@ image::maas.png[width="50%"]
 
 == Module 1 Goals: Step into the Developer role.
 
-In this first module, you will take your first step into the role of a developer. You will access your OpenShift web console and get access to your model credentials that have been set up through a Models-as-a-service interface. 
+In this first module, you will take your first step into the role of a developer. You will access your OpenShift web console and get access to your model credentials that have been set up through a Models-as-a-Service interface. 

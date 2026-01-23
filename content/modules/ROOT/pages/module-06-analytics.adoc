@@ -16,7 +16,7 @@ Let's walk through how to leverage a Grafana dashboard and platform level metric
 
 As AI adoption grows, visibility is critical. Organizations need to track: 
 
-* Model/API usage by team or app
+* Model/API usage by team or model
 * Call volume over time
 * Popular endpoints
 * Cost-to-value
@@ -26,7 +26,7 @@ This insight enables:
 
 * Cost attribution (per team, per model, per environment)
 
-* Capacity planning (predict future GPU or API scale needs)
+* Capacity planning (predict future infrastructure scaling needs)
 
 * Understanding ROI for AI workloads
 
@@ -45,7 +45,7 @@ image::dashboards-grafana.png[]
 
 image::maas-dashboard.png[]
 
-Grafana has access to view all user metrics, so you will see other users in the dashboard stats aside from yourself (assuming other users in the cluster have used the model at this point in the workshop).
+Grafana has access to view all user metrics, so you will see other users in the dashboard stats in addition to yourself (assuming other users in the cluster have used the model at this point in the workshop!).
 
 You may filter information based on user, model (we only have one in this workshop), as well as time frame.
 
@@ -59,7 +59,7 @@ This represents the total token count.
 
 **Authorized Hits by User and Tier**
 
-Separates token count by selected user and thier tier (in this case, all users are given the Premium tier)
+Separates token count by selected user and their tier (in this case, all users are given the Premium tier)
 
 **Top 10 Users by Hits**
 

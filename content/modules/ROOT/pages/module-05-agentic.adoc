@@ -8,7 +8,7 @@ But you won't go at it alone, you'll work with agentic AI tooling to navigate yo
 
 == Why Agentic AI for Admins?
 
-Think of agentic AI as your copilot for cluster operations - ready to answer complex infrastructure questions using real-time telemetry and reasoning. 
+Think of agentic AI as your copilot for cluster operations - ready to answer complex infrastructure questions using reasoning and real-time data.
 
 Instead of navigating complex dashboards, YAML, and shell scripts, you'll try something new:
 
@@ -33,15 +33,15 @@ In this module, we'll use a preconfigured stack that includes:
 *** Enables reproducible, explainable, and extensible AI workflows
 *** In short, it lets you focus on value creation, not toolchain assembly.
 
-IMPORTANT: You could also use frameworks like LangChain or CrewAI instead of or in conjunction with Llama Stack in OpenShift AI. All of these tools help you build agentic AI workflows with reasoning, tool use, and orchestration. Llama Stack is Red Hat's recommended, and supported, framework for standardizing and interweaving disparate pieces of an agentic system. 
+IMPORTANT: You may use frameworks like LangChain or CrewAI in conjunction with Llama Stack in OpenShift AI. These tools, together, help you build agentic AI workflows with reasoning, tool use, and orchestration. Llama Stack is Red Hat's recommended, and supported, framework for standardizing and interweaving disparate pieces of an agentic system into one observable, secure stack.
 
-* **Kubernetes MCP Server**  - allows our LLM agent to interact with our live OpenShift cluster. This MCP server is namespace-scoped. We will use it to interact with the OpenShift resources within the `lls-demo` namespace.
+* **Kubernetes MCP Server**  - allows our LLM agent to interact with our live OpenShift cluster and deployed resources.
 
-* **Slack MCP Server** - allows our LLM agent to interact with a Slack workspace. This MCP server is namespace-scoped as well. We will use it to interact with a specific Slack workspace for which we have authorization configured.
+* **Slack MCP Server** - allows our LLM agent to interact with a Slack workspace. We will use it to interact with a specific Slack workspace for which we have authorization configured.
 
 == Tying it Back to our MaaS Model Endpoint
 
-You can connect a Llama Stack server deployment to any model endpoint you desire. For our workshop, our Llama Stack server instance is configured with our Qwen model and two MCP servers. 
+You can connect a Llama Stack server deployment to any model endpoint(s) you desire. For our workshop, our Llama Stack server instance is configured with our Qwen model and two MCP servers. 
 
 == Test model + MCP server functionality in the playground
 
@@ -61,7 +61,7 @@ image::aiassets-changeproject.png[]
 
 image::genaistudio-mcpservers.png[]
 
-* See what is available to you. Select both MCP servers and then click `Try in Playground`
+* See what is available to you. Select both MCP servers and then click `Try in Playground`.
 
 image::mcp-try-playground.png[]
 
@@ -69,7 +69,7 @@ image::mcp-try-playground.png[]
 
 Welcome to the playground, where you can test your models, assets, and other connections in a user-friendly dashboard interface before integrating into your applications directly. 
 
-As a developer, you likely aren't using the playground as your main way of connecting to your resources. However, it's a great way to test and validate that the model(s) you selected, the MCP servers you configured, and anything else you are integrating work together properly and as expected before you invest in further development.
+As a developer, you likely aren't using the playground as your primary way of connecting to your resources. However, it's a great way to test and validate that the model(s) you selected, the MCP servers you configured, and anything else you are integrating work together properly and as expected before you invest in further development.
 
 In the playground, you will see a chat interface. Our model is preselected along with a default system prompt. If you would like to change or adjust the system prompt or temperature, feel free to do so.
 
@@ -85,7 +85,7 @@ You will see the following pop-up each time you click the lock button. Click `Cl
 
 image::mcp-auth-close.png[]
 
-You are now setup to use the chat interfaces to test the model and its functionality with our MCP servers.
+You are now setup to use the chat interface to test the model and its functionality with our MCP servers.
 
 NOTE: If you refresh the page or have to access the playground again, you will need to reset your settings as they will have been set back to the defaults.
 
@@ -97,7 +97,7 @@ image::view-mcp-tools.png[]
 
 == Investigate our OpenShift Resources
 
-The tool information you just viewed will give you guidance into how to interact with the model in chat to activate the tool calls correctly. You will need to utilize keywords so that you're engaging with the tools you're aiming for.
+The tool information you just viewed will give you guidance into how to interact with the model in chat to activate the tool calls correctly. You will need to utilize the right keywords so that you're engaging with the appropriate tools.
 
 In the chat, enter:
 
@@ -123,7 +123,7 @@ Feel free to experiment further with the tools available.
 
 === Post a Message to our Slack Workspace
 
-With our Slack MCP Server connected to LlamaStack, we can extend our agentic AI experience beyond Kubernetes and into team collaboration tools (among many other possibilities!).
+With our Slack MCP Server connected to Llama Stack, we can extend our agentic AI experience beyond Kubernetes and into team collaboration tools (among many other possibilities!).
 
 This MCP server bridges your AI agent with a Slack workspace to fetch approved data.
 

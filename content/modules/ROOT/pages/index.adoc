@@ -7,7 +7,7 @@ This isn't a simple tutorial, this is the beginning of an adventure into the com
 
 In this hands-on session, you will rotate between key personas critical to delivering modern, AI-infused, production-level enterprise services:
 
-* As a **developer**, you will access model credentials through a Model-as-a-Service interface and integrate AI code assistants into your development workflow. Then, you will connect real applications to private LLM endpoints, use code assistant technology to build applications, and leverage AI to enhance your coding productivity.
+* As a **developer**, you will access model credentials through a Models-as-a-Service interface and integrate AI code assistants into your development workflow. Then, you will connect real applications to private LLM endpoints, use code assistant technology to build applications, and leverage AI to enhance your coding productivity.
 
 * As a **DevOps Practitioner or Site Reliability Engineer**, you will explore the capabilities of agentic AI to monitor your OpenShift cluster resources and interact with collaboration tools.
 
@@ -21,10 +21,10 @@ At the end, you will walk away with practical experience across the lifecycle of
 As a developer, get acquainted with your OpenShift cluster environment and navigate to the OpenShift AI dashboard to view your model deployment and retrieve your endpoint and API token.
 
 === **Module 2:** AI-Assisted Development
-Set up OpenShift Dev Spaces, install an AI code assistant, and connect it to your private MaaS model endpoint to enhance your coding workflow.
+Set up OpenShift Dev Spaces, install an AI-powered code assistant, and connect it to your private MaaS model endpoint to enhance your coding workflow.
 
 === **Module 3:** Game Time
-Build a simple game using Continue's AI assistance. Explore, experiment, and build confidence with AI-assisted coding through a fun, low-pressure project.
+Build a simple game using AI assistance. Explore, experiment, and build confidence with AI-assisted coding through a fun, low-pressure project.
 
 === **Module 4:** System Administration with Agentic AI
 With the mindset of a site reliability engineer or DevOps practitioner, use Model Context Protocol (MCP) servers and Llama Stack to interact with your OpenShift cluster and Slack workspace using natural language.

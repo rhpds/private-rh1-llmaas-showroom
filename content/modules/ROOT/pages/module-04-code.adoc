@@ -19,41 +19,31 @@ You only need to pick one - but feel free to try more if you have time.
 
 From the file explorer, navigate to the `game_starters` directory:
 
-image::game_starters.png[width="50%"]
+image::game-starters.png[width="50%"]
 
 Open the game file of your preference, in the language of your choice.
 
-The top half of the file includes working game code. The bottom half of the file includes instructions as comments to extend the game application. 
+The game files contain commented out instructions on how to proceed to create the game using the Continue chat interface. Read carefully! 
+
+IMPORTANT: Ensure any text that does not contribute to the game code stays as a comment. The first section of each file explains how to get started to create the first draft of your code.
 
 == Use Continue to Build and Enhance
 
-Once you have opened the file you wish to work on, click the `Continue` extension tab again on the left-hand side of the VS Code window. You may toggle between the `Explorer` and `Continue` tabs as you need.
+Once you have opened the file you wish to work on, click the `Continue` extension tab again on the left-hand side of the VS Code window. You may toggle between the file `Explorer` and `Continue` tabs as you need.
 
-image::toggle_sidebar.png[width="10%"]
+image::toggle-sidebar.png[]
 
 === How to Use Continue
 
 You may use the chat interface function to ask any questions about your code. To interact directly with the code itself, you will need to `highlight` and `right-click` on whatever parts of the code you'd like to work on. When you right-click, you will then click on `Continue` in the pop-up menu:
 
-image::continue_popup.png[width="50%"]
+image::continue-popup.png[width="50%"]
 
 Here is a short description of each of the Continue options so that you will understand how to use them properly:
 
-**Add Highlighted Code to Context** - Shares the selected code with Continue's chat interface so you can ask questions about it or reference it in conversation
+**Add to Chat** - Shares the selected code with Continue's chat interface so you can ask questions about a particular section or recommendations for how to modify a specific piece of code.
 
-**Edit Highlighted Code** - Opens a new Edit-mode chat interface where you can describe how you want the selected code modified (e.g., "make this function async" or "add error handling")
-
-**Fix this Code** - Automatically analyzes the selected code for bugs, syntax errors, or logical issues and suggests corrections
-
-**Optimize this Code** - Reviews the selected code for performance improvements, better algorithms, or more efficient approaches
-
-**Write a Docstring for this Code** - Generates documentation strings that explain what the selected function or class does, its parameters, and return values
-
-**Write Comments for this Code** - Adds inline comments to explain what the selected code is doing, making it more readable and maintainable
-
-Follow the guidance in the file comments, or ask your own questions - this is your playground!
-
-IMPORTANT: Ensure any text that does not contribute to the game code stays as a comment. 
+**Add to Edit** - Opens a new Edit-mode chat interface where you can describe how you want the selected code modified (e.g., "make this function async" or "add error handling")
 
 == Run (and Play) Your Game
 
@@ -105,13 +95,13 @@ Run the following command (substitute your filename):
 
 * Make sure you’re in the correct directory (ls to list files)
 
-* For .sh files, try `bash yourfile.sh` if ``./yourfile.sh` doesn't work.
+* For .sh files, try `bash yourfile.sh` if `./yourfile.sh` doesn't work.
 
 **Other error or application isn't working as expected**:
 
-* Use your code assistant to help you debug
+* Use your code assistant to help you debug!
 
-* Feed the errors or explain any issues in the extension chat and have the AI help you correct your code
+* Feed the errors or explain any issues in the chat and have the AI help you correct your code (highlight and add entire script to `Chat` or `Edit` to have the model evaluate and fix any errors.
 
 == Stuck? Peek at a Solution
 

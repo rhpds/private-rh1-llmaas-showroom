@@ -9,21 +9,25 @@ Our home base will be our OpenShift cluster web console:
 
 // NOTE: If you are accessing these instructions through our Red Hat Demo Platform workshop, the information below will render properly with unique values. If you are accessing the instructions separately for your own cluster, from the GitHub repository, you will instead see placeholder values.
 
-URL: https://console-openshift-console.{openshift_cluster_ingress_domain}/[https://console-openshift-console.{openshift_cluster_ingress_domain}/,window=_blank].
-Login to OpenShift with ({user}/{password}) 
+**Console URL**: https://console-openshift-console.{openshift_cluster_ingress_domain}/[https://console-openshift-console.{openshift_cluster_ingress_domain}/,window=_blank].
+
+**Login Credentials**:
+
+. **User**: {user}
+. **Password**: {password}
 
 From here, we will navigate to and between the following environments throughout our workshop:
 
-* Cluster Argo CD
-** View our gitops application deployments. This may be useful if you need to check the health of any of our apps.
-* Grafana
+* **Cluster Argo CD**
+** We may use this app to view our GitOps application deployments. This may be useful if you need to check the health of any of our apps.
+* **Grafana**
 ** A dashboard interface that will show us model usage metrics.
-* Red Hat OpenShift AI
+* **Red Hat OpenShift AI**
 ** Where we will view and manage our model deployments and other MLOps/LLMOps tasks and agentic resources.
-* Red Hat OpenShift Dev Spaces
+* **Red Hat OpenShift Dev Spaces**
 ** Where we will go into our developer persona and leverage our model as a service setup for coding tasks.
 
-You may find and go to these locations via our navigation button in the web console:
+You may find and go to these applications via our navigation button in the web console:
 
 image::apps-menu.png[]
 
@@ -51,21 +55,21 @@ Now, go to the `Gen AI Studio` section of the dashboard and select `AI asset end
 
 image::nav-genaistudio.png[]
 
-In the AI asset endpoints page, change the project from `grafana` to `Workspace userx` with x equal to your assigned user number.
+In the AI asset endpoints page, change the project from `grafana` to `Workspace userx` with `x` equal to your assigned user number.
 
 image::genaistudio-changeproject.png[]
 
 Now you may view your available asset endpoints.
 
-You will not see any available models under the `Models` tab. Why? Because you do not have a model deployed in this namespace. 
+You will not see any available models under the `Models` tab. Why? Because you do not have a model deployed in this project (project = namespace).
 
-We do, however, have a model deployed in a separate namespace managed by our cluster admin. This admin has set up a `Models as a Service` architecture for our organization, with a central model deployed and managed, available for use by disparate teams. 
+We do, however, have a model deployed in a separate namespace managed by our cluster admin. This admin has set up a `Models as a Service` architecture for our organization with a central model they have deployed and now manage that is available for use by remote teams across the organization. 
 
-We will not be able to manage the model deployment with our simple user privileges, but we can access its endpoint information for use via the `Models as a service` tab. 
+We will not be able to manage the model deployment with our simple user privileges, but we can access its endpoint information via the `Models as a service` tab. 
 
 image::maas-tab.png[]
 
-Select the tab. You will see we have one model deployed: `qwen-4b-instruct`
+Select the tab. You will see your admin has deployed one model for you to use: `qwen-4b-instruct`
 
 image::maas-model.png[]
 
@@ -75,7 +79,7 @@ We need the endpoint for the next section. Select `View` under the `External end
 
 image::view-endpoint.png[]
 
-Copy the MaaS route into a separate note file on your computer.
+Copy the MaaS route into a separate note file on your computer for safekeeping.
 
 image::copy-route.png[]
 
@@ -83,7 +87,7 @@ Now, click `Generate API token`.
 
 image::generate-token.png[]
 
-Copy this value alongside your route endpoint.
+Copy this value along with your route endpoint.
 
 image::copy-token.png[]
 
