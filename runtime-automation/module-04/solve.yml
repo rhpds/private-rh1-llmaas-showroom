@@ -1,0 +1,9 @@
+---
+- name: Module 4 Solve — Game Time
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  tasks:
+    - name: TODO — implement solve tasks
+      ansible.builtin.debug:
+        msg: "Stub — replace with real solve tasks"
