@@ -5,7 +5,7 @@ default_width: 30
 persist_url_state: true
 view_switcher:
   enabled: true
-  default_mode: split
+  default_mode: content
 
 antora:
   name: modules
