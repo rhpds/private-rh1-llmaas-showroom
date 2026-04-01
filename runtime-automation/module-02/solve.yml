@@ -3,6 +3,10 @@
   hosts: localhost
   connection: local
   gather_facts: false
+  vars:
+    maas_api_url: "http://maas-api.maas-api.svc.cluster.local:8080"
+    student_user: "{{ user | default('') }}"
+    student_group: "tier-enterprise-users"
   tasks:
     - name: Verify qwen model endpoint is reachable (internal)
       ansible.builtin.uri:
@@ -14,8 +18,41 @@
       register: r_model_endpoint
       ignore_errors: true
 
-    - name: Report model status
+    - name: Check if API key already exists for user
+      ansible.builtin.uri:
+        url: "{{ maas_api_url }}/v1/api-keys"
+        method: GET
+        headers:
+          X-MaaS-Username: "{{ student_user }}"
+          X-MaaS-Group: '["{{ student_group }}"]'
+        return_content: true
+        timeout: 10
+      register: r_existing_keys
+      ignore_errors: true
+
+    - name: Generate API token for user (if none exists)
+      ansible.builtin.uri:
+        url: "{{ maas_api_url }}/v1/api-keys"
+        method: POST
+        headers:
+          X-MaaS-Username: "{{ student_user }}"
+          X-MaaS-Group: '["{{ student_group }}"]'
+          Content-Type: application/json
+        body_format: json
+        body:
+          name: "{{ student_user }}-token"
+        return_content: true
+        timeout: 10
+      register: r_generated_token
+      when: >
+        r_existing_keys.status | default(0) == 200 and
+        (r_existing_keys.json | default([]) | length == 0)
+      ignore_errors: true
+
+    - name: Report solve status
       ansible.builtin.debug:
         msg: >-
           Model endpoint is {{ 'reachable' if r_model_endpoint.status | default(0) == 200 else 'NOT reachable' }}.
-          This is a read-only exploration module — no resources to create.
+          API token: {{ 'already existed' if (r_existing_keys.json | default([]) | length > 0)
+                        else ('generated successfully' if r_generated_token.status | default(0) == 200
+                        else 'generation failed') }}.

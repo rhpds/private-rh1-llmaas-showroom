@@ -38,12 +38,4 @@ antora:
     - name: module-08-resources
       label: "Module 8: Resources"
 
-tabs:
-  - name: OpenShift AI Dashboard
-    url: 'https://rhods-dashboard-redhat-ods-applications.{openshift_cluster_ingress_domain}/'
-    external: false
-  - name: OpenShift Console
-    url: '{openshift_console_url}'
-    external: false
-
 skipModuleEnabled: true

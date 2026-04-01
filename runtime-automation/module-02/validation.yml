@@ -3,6 +3,9 @@
   hosts: localhost
   connection: local
   gather_facts: false
+  vars:
+    maas_api_url: "http://maas-api.maas-api.svc.cluster.local:8080"
+    student_group: "tier-enterprise-users"
   tasks:
     - name: Check Task 1 — qwen model endpoint is reachable
       ansible.builtin.uri:
@@ -18,23 +21,30 @@
       ansible.builtin.set_fact:
         _student_user_ok: "{{ student_user | default('') | length > 0 }}"
 
+    - name: Check Task 3 — API token generated for user in MaaS
+      ansible.builtin.uri:
+        url: "{{ maas_api_url }}/v1/api-keys"
+        method: GET
+        headers:
+          X-MaaS-Username: "{{ student_user | default('') }}"
+          X-MaaS-Group: '["{{ student_group }}"]'
+        return_content: true
+        timeout: 10
+      register: r_api_keys
+      ignore_errors: true
+
     - name: Build task results
       ansible.builtin.set_fact:
         _task1_ok: "{{ r_model_endpoint.status | default(0) == 200 }}"
         _task2_ok: "{{ _student_user_ok }}"
+        _task3_ok: "{{ r_api_keys.status | default(0) == 200 and (r_api_keys.json | default([]) | length > 0) }}"
 
     - name: Validate all tasks
       validation_check:
-        check: "{{ _task1_ok and _task2_ok }}"
+        check: "true"
         pass_msg: |
-          ✅ Task 1: Model endpoint qwen3-4b-instruct is reachable
-          ✅ Task 2: Student user {{ student_user }} is configured
+          {{ '✅' if _task1_ok else '⚠️' }} Task 1: Model endpoint qwen3-4b-instruct is {{ 'reachable' if _task1_ok else 'not reachable (check with admin)' }}
+          {{ '✅' if _task2_ok else '⚠️' }} Task 2: Student user {{ student_user | default('unknown') }} is {{ 'configured' if _task2_ok else 'not set' }}
+          {{ '✅' if _task3_ok else '⚠️' }} Task 3: API token {{ 'found' if _task3_ok else 'not yet generated — go to Gen AI Studio → AI asset endpoints → Models as a service → View → Generate API token' }}
 
-          ⚠️ Note: This module is browser-based exploration. The checks above
-          confirm your environment has the MaaS model available.
-        error_msg: |
-          {{ '✅' if _task1_ok else '❌' }} Task 1: Model endpoint qwen3-4b-instruct is reachable
-          {{ '✅' if _task2_ok else '❌' }} Task 2: Student user is configured
-
-          ⚠️ This module checks pre-provisioned infrastructure.
-          If tasks are failing, contact your lab administrator.
+          ℹ️ Module 2 is in development — validation is informational only.
