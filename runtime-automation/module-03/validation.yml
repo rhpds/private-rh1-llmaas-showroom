@@ -1,9 +1,0 @@
----
-- name: Module 3 Validation — AI-Assisted Development
-  hosts: localhost
-  connection: local
-  gather_facts: false
-  tasks:
-    - name: TODO — implement validation tasks
-      ansible.builtin.debug:
-        msg: "Stub — replace with real validation tasks"

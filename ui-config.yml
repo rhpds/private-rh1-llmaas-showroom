@@ -1,42 +1,16 @@
 ---
-type: zero-touch
+type: showroom
 
+# Set the left column width to 30%
 default_width: 30
+# Persist the URL state so browser refresh doesn't reset the UI
 persist_url_state: true
 
 tabs:
-  - name: Terminal
+  - name: Bastion
     path: /wetty
     port: 443
   - name: OpenShift AI Dashboard
     url: 'https://rhods-dashboard-redhat-ods-applications.apps.cluster-guid.guid.sandbox.opentlc.com/'
   - name: OpenShift Console
     url: 'https://console-openshift-console.apps.cluster-guid.guid.sandbox.opentlc.com'
-
-modules:
-  - name: Module 1 — Introduction
-    page: module-01-introduction.html
-  - name: Module 2 — Deploying Your First Model
-    page: module-02-model.html
-    solve: true
-    validate: true
-  - name: Module 3 — AI-Assisted Development
-    page: module-03-code.html
-    solve: true
-    validate: true
-  - name: Module 4 — Game Time
-    page: module-04-code.html
-    solve: true
-    validate: true
-  - name: Module 5 — Agentic AI
-    page: module-05-agentic.html
-    solve: true
-    validate: true
-  - name: Module 6 — Usage Analytics
-    page: module-06-analytics.html
-    solve: true
-    validate: true
-  - name: Module 7 — Closing Summary
-    page: module-07-closing.html
-  - name: Module 8 — Resources
-    page: module-08-resources.html

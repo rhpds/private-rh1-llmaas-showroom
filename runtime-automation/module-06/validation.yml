@@ -1,9 +1,0 @@
----
-- name: Module 6 Validation — Usage Analytics and Reporting
-  hosts: localhost
-  connection: local
-  gather_facts: false
-  tasks:
-    - name: TODO — implement validation tasks
-      ansible.builtin.debug:
-        msg: "Stub — replace with real validation tasks"
