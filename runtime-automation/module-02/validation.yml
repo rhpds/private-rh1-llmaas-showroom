@@ -6,7 +6,7 @@
   tasks:
     - name: Check Task 1 — qwen model endpoint is reachable
       ansible.builtin.uri:
-        url: "http://qwen3-4b-instruct-kserve-workload-svc.llm.svc.cluster.local:8000/v1/models"
+        url: "https://qwen3-4b-instruct-kserve-workload-svc.llm.svc.cluster.local:8000/v1/models"
         method: GET
         return_content: true
         validate_certs: false
