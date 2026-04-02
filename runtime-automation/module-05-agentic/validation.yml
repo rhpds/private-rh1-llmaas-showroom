@@ -24,15 +24,17 @@
       ignore_errors: true
 
     # -------------------------------------------------------
-    # Check 2 — Llama Stack playground reachable
+    # Check 2 — Llama Stack playground pod is running
+    #   (NetworkPolicy blocks cross-namespace HTTP; check pod status via k8s API instead)
     # -------------------------------------------------------
-    - name: Check Task 2 — Llama Stack playground service
-      ansible.builtin.uri:
-        url: "{{ llama_stack_url }}/v1/models"
-        method: GET
-        return_content: true
-        timeout: 10
-      register: r_llama_stack
+    - name: Check Task 2 — Llama Stack playground pod is running
+      kubernetes.core.k8s_info:
+        api_version: v1
+        kind: Pod
+        namespace: "{{ student_user }}"
+        label_selectors:
+          - "app=llama-stack"
+      register: r_llama_stack_pods
       ignore_errors: true
 
     # -------------------------------------------------------
@@ -63,7 +65,7 @@
     - name: Build task results
       ansible.builtin.set_fact:
         _task1_ok: "{{ r_model_endpoint.status | default(0) == 200 }}"
-        _task2_ok: "{{ r_llama_stack.status | default(0) == 200 }}"
+        _task2_ok: "{{ (r_llama_stack_pods.resources | default([]) | selectattr('status.phase', 'equalto', 'Running') | list | length) > 0 }}"
         _task3_ok: "{{ r_ocp_mcp is not failed }}"
         _task4_ok: "{{ r_slack_mcp is not failed }}"
 
