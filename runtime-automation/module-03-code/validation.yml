@@ -3,7 +3,96 @@
   hosts: localhost
   connection: local
   gather_facts: false
+  vars:
+    maas_api_url: "http://maas-api.maas-api.svc.cluster.local:8080"
+    model_internal_url: "https://qwen3-4b-instruct-kserve-workload-svc.llm.svc.cluster.local:8000"
+    maas_gateway_host: "data-science-gateway.{{ openshift_cluster_ingress_domain }}"
+    student_user: "{{ user | default('') }}"
+    student_groups:
+      - "tier-enterprise-users"
   tasks:
-    - name: TODO — implement validation tasks
-      ansible.builtin.debug:
-        msg: "Stub — replace with real validation tasks"
+    # -------------------------------------------------------
+    # Check 1 — Model endpoint reachable
+    # -------------------------------------------------------
+    - name: Check Task 1 — qwen model endpoint is reachable
+      ansible.builtin.uri:
+        url: "{{ model_internal_url }}/v1/models"
+        method: GET
+        return_content: true
+        validate_certs: false
+        timeout: 10
+      register: r_model_endpoint
+      ignore_errors: true
+
+    # -------------------------------------------------------
+    # Check 2 — User has an API key
+    # -------------------------------------------------------
+    - name: Check Task 2 — user has an API key in MaaS
+      ansible.builtin.uri:
+        url: "{{ maas_api_url }}/v1/api-keys"
+        method: GET
+        headers:
+          X-MaaS-Username: "{{ student_user }}"
+          X-MaaS-Group: "{{ student_groups | to_json }}"
+        return_content: true
+        timeout: 10
+      register: r_api_keys
+      ignore_errors: true
+
+    - name: Get API key for chat test
+      ansible.builtin.set_fact:
+        _api_key: "{{ (r_api_keys.json | default([]))[0].key | default('') }}"
+      when: r_api_keys.status | default(0) == 200
+
+    # -------------------------------------------------------
+    # Check 3 — Chat completion works via MaaS gateway
+    # -------------------------------------------------------
+    - name: Check Task 3 — chat completion via MaaS gateway
+      ansible.builtin.uri:
+        url: "https://{{ maas_gateway_host }}/llm/qwen3-4b-instruct/v1/chat/completions"
+        method: POST
+        headers:
+          Content-Type: application/json
+          Authorization: "Bearer {{ _api_key }}"
+        body_format: json
+        body:
+          model: "qwen3-4b-instruct"
+          messages:
+            - role: user
+              content: "Say hello in one word."
+          max_tokens: 10
+        return_content: true
+        validate_certs: false
+        timeout: 30
+      register: r_chat_test
+      ignore_errors: true
+      when: _api_key | default('') | length > 0
+
+    # -------------------------------------------------------
+    # Build results
+    # -------------------------------------------------------
+    - name: Build task results
+      ansible.builtin.set_fact:
+        _task1_ok: "{{ r_model_endpoint.status | default(0) == 200 }}"
+        _task2_ok: "{{ r_api_keys.status | default(0) == 200 and (r_api_keys.json | default([]) | length > 0) }}"
+        _task3_ok: "{{ r_chat_test.status | default(0) == 200 }}"
+
+    - name: Validate all tasks
+      validation_check:
+        check: "{{ _task1_ok and _task2_ok and _task3_ok }}"
+        pass_msg: |
+          ✅ Task 1: Model endpoint qwen3-4b-instruct is reachable
+          ✅ Task 2: API key found for user {{ student_user }}
+          ✅ Task 3: Chat completion via MaaS gateway is working
+          ⚠️ Task 4: DevSpaces workspace opened — verify manually in browser
+          ⚠️ Task 5: Continue extension installed — verify manually in browser
+          ⚠️ Task 6: config.yaml configured — verify model name shows in Continue sidebar
+        error_msg: |
+          {{ '✅' if _task1_ok else '❌' }} Task 1: Model endpoint qwen3-4b-instruct {{ 'is reachable' if _task1_ok else 'is NOT reachable — contact cluster admin' }}
+          {{ '✅' if _task2_ok else '❌' }} Task 2: API key {{ 'found' if _task2_ok else 'not found — go to Gen AI Studio → AI asset endpoints → Models as a service → Generate API token' }} for user {{ student_user }}
+          {{ '✅' if _task3_ok else '❌' }} Task 3: Chat completion via MaaS gateway {{ 'is working' if _task3_ok else 'failed — check API key and model endpoint configuration' }}
+          ⚠️ Task 4: DevSpaces workspace opened — verify manually in browser
+          ⚠️ Task 5: Continue extension installed — verify manually in browser
+          ⚠️ Task 6: config.yaml configured — verify model name shows in Continue sidebar
+
+          {{ '' if (_task1_ok and _task2_ok and _task3_ok) else 'Fix: Run the Solve button first, then complete the manual steps in your browser.' }}

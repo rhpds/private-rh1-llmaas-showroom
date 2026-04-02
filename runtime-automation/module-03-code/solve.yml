@@ -3,7 +3,122 @@
   hosts: localhost
   connection: local
   gather_facts: false
+  vars:
+    maas_api_url: "http://maas-api.maas-api.svc.cluster.local:8080"
+    model_internal_url: "https://qwen3-4b-instruct-kserve-workload-svc.llm.svc.cluster.local:8000"
+    maas_gateway_host: "data-science-gateway.{{ openshift_cluster_ingress_domain }}"
+    student_user: "{{ user | default('') }}"
+    student_groups:
+      - "tier-enterprise-users"
   tasks:
-    - name: TODO — implement solve tasks
+    # -------------------------------------------------------
+    # Task 1 — Verify model endpoint is reachable (prerequisite)
+    # -------------------------------------------------------
+    - name: Verify qwen model endpoint is reachable (internal)
+      ansible.builtin.uri:
+        url: "{{ model_internal_url }}/v1/models"
+        method: GET
+        return_content: true
+        validate_certs: false
+        timeout: 10
+      register: r_model_endpoint
+      ignore_errors: true
+
+    # -------------------------------------------------------
+    # Task 2 — Ensure user has an API key from MaaS
+    # -------------------------------------------------------
+    - name: Check if API key already exists for user
+      ansible.builtin.uri:
+        url: "{{ maas_api_url }}/v1/api-keys"
+        method: GET
+        headers:
+          X-MaaS-Username: "{{ student_user }}"
+          X-MaaS-Group: "{{ student_groups | to_json }}"
+        return_content: true
+        timeout: 10
+      register: r_existing_keys
+      ignore_errors: true
+
+    - name: Generate API token for user (if none exists)
+      ansible.builtin.uri:
+        url: "{{ maas_api_url }}/v1/api-keys"
+        method: POST
+        headers:
+          X-MaaS-Username: "{{ student_user }}"
+          X-MaaS-Group: "{{ student_groups | to_json }}"
+          Content-Type: application/json
+        body_format: json
+        body:
+          name: "{{ student_user }}-token"
+        return_content: true
+        timeout: 10
+      register: r_generated_token
+      when: >
+        r_existing_keys.status | default(0) == 200 and
+        (r_existing_keys.json | default([]) | length == 0)
+      ignore_errors: true
+
+    - name: Determine API key value
+      ansible.builtin.set_fact:
+        _api_key: >-
+          {{ (r_existing_keys.json | default([]))[0].key | default('')
+             if (r_existing_keys.json | default([]) | length > 0)
+             else r_generated_token.json.key | default('COULD_NOT_RETRIEVE') }}
+
+    # -------------------------------------------------------
+    # Task 3 — Test chat completion through the gateway
+    # -------------------------------------------------------
+    - name: Test chat completion via MaaS gateway
+      ansible.builtin.uri:
+        url: "https://{{ maas_gateway_host }}/llm/qwen3-4b-instruct/v1/chat/completions"
+        method: POST
+        headers:
+          Content-Type: application/json
+          Authorization: "Bearer {{ _api_key }}"
+        body_format: json
+        body:
+          model: "qwen3-4b-instruct"
+          messages:
+            - role: user
+              content: "Say hello in one word."
+          max_tokens: 10
+        return_content: true
+        validate_certs: false
+        timeout: 30
+      register: r_chat_test
+      ignore_errors: true
+
+    # -------------------------------------------------------
+    # Report — provide config.yaml content for the student
+    # -------------------------------------------------------
+    - name: Report solve status
       ansible.builtin.debug:
-        msg: "Stub — replace with real solve tasks"
+        msg: |
+          Model endpoint: {{ 'reachable' if r_model_endpoint.status | default(0) == 200 else 'NOT reachable' }}
+          API key: {{ 'available' if _api_key != 'COULD_NOT_RETRIEVE' else 'could not retrieve — generate from OpenShift AI dashboard' }}
+          Chat completion test: {{ 'passed' if r_chat_test.status | default(0) == 200 else 'failed' }}
+
+          ⚠️ MANUAL STEPS REQUIRED — the solve cannot automate browser interactions:
+            1. Open DevSpaces (navigate via OpenShift console → Applications menu)
+            2. Open your workspace and click "Trust" when prompted
+            3. Install the Continue extension from the Extensions marketplace
+            4. Open ~/.continue/config.yaml and paste the following configuration:
+
+          --- config.yaml ---
+          name: Local Assistant
+          version: 1.0.0
+          schema: v1
+          models:
+            - name: Qwen3-4B-Instruct
+              provider: openai
+              model: "qwen3-4b-instruct"
+              apiBase: "https://{{ maas_gateway_host }}/llm/qwen3-4b-instruct/v1"
+              apiKey: "{{ _api_key }}"
+          context:
+            - provider: code
+            - provider: docs
+            - provider: diff
+            - provider: terminal
+            - provider: problems
+            - provider: folder
+            - provider: codebase
