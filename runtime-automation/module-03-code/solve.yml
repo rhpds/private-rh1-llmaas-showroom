@@ -38,10 +38,6 @@
       register: r_existing_keys
       ignore_errors: true
 
-    - name: Debug API keys response
-      ansible.builtin.debug:
-        msg: "API keys response: {{ r_existing_keys.json | default('NO JSON') }}"
-
     - name: Generate API token for user (if none exists)
       ansible.builtin.uri:
         url: "{{ maas_api_url }}/v1/api-keys"
@@ -60,17 +56,6 @@
         r_existing_keys.status | default(0) == 200 and
         (r_existing_keys.json | default([]) | length == 0)
       ignore_errors: true
-
-    - name: Determine API key value
-      ansible.builtin.set_fact:
-        _api_key: >-
-          {{ (r_existing_keys.json | default([]))[0].key | default('')
-             if (r_existing_keys.json | default([]) | length > 0)
-             else r_generated_token.json.key | default('COULD_NOT_RETRIEVE') }}
-
-    - name: Debug determined API key
-      ansible.builtin.debug:
-        msg: "Determined API key: '{{ _api_key }}' (length: {{ _api_key | length }})"
 
     # -------------------------------------------------------
     # Task 3 — Test chat completion via internal model endpoint
@@ -101,14 +86,15 @@
       ansible.builtin.debug:
         msg: |
           Model endpoint: {{ 'reachable' if r_model_endpoint.status | default(0) == 200 else 'NOT reachable' }}
-          API key: {{ 'available' if _api_key | length > 0 else 'could not retrieve — generate from OpenShift AI dashboard' }}
+          API key: {{ 'exists (copy from OpenShift AI dashboard)' if (r_existing_keys.json | default([]) | length > 0) else ('generated — copy from OpenShift AI dashboard' if r_generated_token.status | default(0) == 200 else 'not found — generate from OpenShift AI dashboard') }}
           Chat completion test: {{ 'passed' if r_chat_test.status | default(0) == 200 else 'failed' }}
 
           ⚠️ MANUAL STEPS REQUIRED — the solve cannot automate browser interactions:
             1. Open DevSpaces (navigate via OpenShift console → Applications menu)
             2. Open your workspace and click "Trust" when prompted
             3. Install the Continue extension from the Extensions marketplace
-            4. Open ~/.continue/config.yaml and paste the following configuration:
+            4. Open ~/.continue/config.yaml and paste the following configuration
+               (replace YOUR_API_KEY with your actual API key from the dashboard):
 
           --- config.yaml ---
           name: Local Assistant
@@ -119,7 +105,7 @@
               provider: openai
               model: "qwen3-4b-instruct"
               apiBase: "https://{{ maas_gateway_host }}/llm/qwen3-4b-instruct/v1"
-              apiKey: "{{ _api_key }}"
+              apiKey: "YOUR_API_KEY"
           context:
             - provider: code
             - provider: docs

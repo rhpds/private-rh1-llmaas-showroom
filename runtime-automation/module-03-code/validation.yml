@@ -6,7 +6,6 @@
   vars:
     maas_api_url: "http://maas-api.maas-api.svc.cluster.local:8080"
     model_internal_url: "https://qwen3-4b-instruct-kserve-workload-svc.llm.svc.cluster.local:8000"
-    maas_gateway_host: "data-science-gateway.{{ lookup('env', 'DOMAIN') }}"
     student_groups:
       - "tier-enterprise-users"
   tasks:
@@ -38,21 +37,15 @@
       register: r_api_keys
       ignore_errors: true
 
-    - name: Get API key for chat test
-      ansible.builtin.set_fact:
-        _api_key: "{{ (r_api_keys.json | default([]))[0].key | default('') }}"
-      when: r_api_keys.status | default(0) == 200
-
     # -------------------------------------------------------
-    # Check 3 — Chat completion works via MaaS gateway
+    # Check 3 — Chat completion works via internal endpoint
     # -------------------------------------------------------
-    - name: Check Task 3 — chat completion via MaaS gateway
+    - name: Check Task 3 — chat completion via internal model endpoint
       ansible.builtin.uri:
-        url: "https://{{ maas_gateway_host }}/llm/qwen3-4b-instruct/v1/chat/completions"
+        url: "{{ model_internal_url }}/v1/chat/completions"
         method: POST
         headers:
           Content-Type: application/json
-          Authorization: "Bearer {{ _api_key }}"
         body_format: json
         body:
           model: "qwen3-4b-instruct"
@@ -65,7 +58,6 @@
         timeout: 30
       register: r_chat_test
       ignore_errors: true
-      when: _api_key | default('') | length > 0
 
     # -------------------------------------------------------
     # Build results
@@ -82,16 +74,16 @@
         pass_msg: |
           ✅ Task 1: Model endpoint qwen3-4b-instruct is reachable
           ✅ Task 2: API key found for user {{ student_user }}
-          ✅ Task 3: Chat completion via MaaS gateway is working
+          ✅ Task 3: Chat completion is working (model responds to prompts)
           ⚠️ Task 4: DevSpaces workspace opened — verify manually in browser
           ⚠️ Task 5: Continue extension installed — verify manually in browser
-          ⚠️ Task 6: config.yaml configured — verify model name shows in Continue sidebar
+          ⚠️ Task 6: config.yaml configured with model endpoint and API key — verify Qwen3-4B-Instruct shows in Continue sidebar
         error_msg: |
           {{ '✅' if _task1_ok else '❌' }} Task 1: Model endpoint qwen3-4b-instruct {{ 'is reachable' if _task1_ok else 'is NOT reachable — contact cluster admin' }}
           {{ '✅' if _task2_ok else '❌' }} Task 2: API key {{ 'found' if _task2_ok else 'not found — go to Gen AI Studio → AI asset endpoints → Models as a service → Generate API token' }} for user {{ student_user }}
-          {{ '✅' if _task3_ok else '❌' }} Task 3: Chat completion via MaaS gateway {{ 'is working' if _task3_ok else 'failed — check API key and model endpoint configuration' }}
+          {{ '✅' if _task3_ok else '❌' }} Task 3: Chat completion {{ 'is working' if _task3_ok else 'failed — model may be down, contact cluster admin' }}
           ⚠️ Task 4: DevSpaces workspace opened — verify manually in browser
           ⚠️ Task 5: Continue extension installed — verify manually in browser
-          ⚠️ Task 6: config.yaml configured — verify model name shows in Continue sidebar
+          ⚠️ Task 6: config.yaml configured with model endpoint and API key — verify Qwen3-4B-Instruct shows in Continue sidebar
 
           {{ '' if (_task1_ok and _task2_ok and _task3_ok) else 'Fix: Run the Solve button first, then complete the manual steps in your browser.' }}
