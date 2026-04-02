@@ -4,6 +4,7 @@
   connection: local
   gather_facts: false
   vars:
+    student_user: "{{ user | default('') }}"
     model_internal_url: "https://qwen3-4b-instruct-kserve-workload-svc.llm.svc.cluster.local:8000"
     llama_stack_url: "http://lsd-genai-playground-service.{{ student_user }}.svc.cluster.local:8321"
     ocp_mcp_url: "http://ocp-mcp-server.lls-demo.svc.cluster.local:8080"

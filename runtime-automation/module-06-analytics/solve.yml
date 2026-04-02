@@ -4,6 +4,7 @@
   connection: local
   gather_facts: false
   vars:
+    student_user: "{{ user | default('') }}"
     grafana_url: "http://grafana-service.grafana.svc.cluster.local:3000"
     maas_api_url: "http://maas-api.maas-api.svc.cluster.local:8080"
     student_groups:

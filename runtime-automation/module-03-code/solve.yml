@@ -4,6 +4,7 @@
   connection: local
   gather_facts: false
   vars:
+    student_user: "{{ user | default('') }}"
     maas_api_url: "http://maas-api.maas-api.svc.cluster.local:8080"
     model_internal_url: "https://qwen3-4b-instruct-kserve-workload-svc.llm.svc.cluster.local:8000"
     maas_gateway_host: "data-science-gateway.{{ lookup('env', 'DOMAIN') }}"
