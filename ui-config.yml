@@ -2,26 +2,4 @@
 type: showroom
 
 persist_url_state: true
-
-antora:
-  name: modules
-  dir: www
-  modules:
-    - name: index
-      label: "Introduction"
-    - name: module-02-model
-      label: "Module 2: Deploying Your First Model"
-    - name: module-03-code
-      label: "Module 3: AI-Assisted Development"
-    - name: module-04-code
-      label: "Module 4: Game Time"
-    - name: module-05-agentic
-      label: "Module 5: Agentic AI"
-    - name: module-06-analytics
-      label: "Module 6: Usage Analytics"
-    - name: module-07-closing
-      label: "Module 7: Closing Summary"
-    - name: module-08-resources
-      label: "Module 8: Resources"
-
 skipModuleEnabled: true
