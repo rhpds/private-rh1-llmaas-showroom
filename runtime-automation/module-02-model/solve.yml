@@ -46,7 +46,7 @@
         timeout: 10
       register: r_generated_token
       when: >
-        r_existing_keys.status | default(0) == 200 || 201 and
+        r_existing_keys.status | default(0) in [200, 201] and
         (r_existing_keys.json | default([]) | length == 0)
       ignore_errors: true
 
