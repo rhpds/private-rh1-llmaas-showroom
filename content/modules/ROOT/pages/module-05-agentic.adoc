@@ -169,4 +169,16 @@ In this module, you:
 * Interacted with a Slack workspace using natural language
 * Added AI guardrails with input/output shields.
 
-You just used AI to reduce operational complexity and speed up workflows! 
+You just used AI to reduce operational complexity and speed up workflows!
+
+include::common/solve-button.adoc[]
+
+++++
+<div class="solve-button-placeholder" data-module="module-05-agentic"></div>
+++++
+
+include::common/validate-button.adoc[]
+
+++++
+<div class="validate-button-placeholder" data-module="module-05-agentic"></div>
+++++

@@ -165,4 +165,16 @@ You've now:
 * Installed Continue and configured it to connect to your private Granite model
 * Set up an AI assistant that can refactor, edit and explain your code!
 
-Next, you will use Continue to help you develop a little fun game. 
+Next, you will use Continue to help you develop a little fun game.
+
+include::common/solve-button.adoc[]
+
+++++
+<div class="solve-button-placeholder" data-module="module-03-code"></div>
+++++
+
+include::common/validate-button.adoc[]
+
+++++
+<div class="validate-button-placeholder" data-module="module-03-code"></div>
+++++

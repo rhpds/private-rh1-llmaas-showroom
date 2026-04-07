@@ -1,0 +1,20 @@
+// Validate Button Component - CSS and JavaScript only
+// Add placeholder in module files: <div class="validate-button-placeholder" data-module="module-name"></div>
+
+[pass,subs="attributes"]
+++++
+<style>
+.validate-section {margin: 2rem 0; padding: 1.5rem; background: #f8f9fa; border: 2px solid #dee2e6; border-radius: 8px;}
+.validate-controls {margin-bottom: 1rem;}
+.validate-button {padding: 0.75rem 1.5rem; font-size: 1rem; font-weight: 600; border: none; border-radius: 6px; cursor: pointer; transition: all 0.3s ease; background: #007bff; color: white;}
+.validate-button:hover:not(:disabled) {background: #0056b3; transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);}
+.validate-button:disabled {background: #adb5bd; cursor: not-allowed; animation: pulse 1.5s ease-in-out infinite;}
+.validate-output {margin-top: 1rem; background-color: #000 !important; border-radius: 6px; padding: 1.5rem; max-height: 600px; overflow-y: auto; border: 2px solid #00bfff; box-shadow: 0 0 10px rgba(0, 191, 255, 0.2);}
+.validate-output-content {margin: 0 !important; padding: 0 !important; color: #00bfff !important; background: transparent !important; font-family: 'Courier New', 'Courier', monospace; font-size: 14px; line-height: 1.8; white-space: pre-wrap; word-wrap: break-word; font-weight: 500;}
+@keyframes pulse {0%, 100% {opacity: 1;} 50% {opacity: 0.5;}}
+</style>
+
+<script>
+(function(){if(typeof window.validateButtonInit!=='undefined')return;window.validateButtonInit=true;function createValidateSection(n){const s=document.createElement('div');s.className='validate-section';s.innerHTML=`<div class="validate-controls"><button class="validate-button" data-module="${n}">✓ Validate Module</button></div><div class="validate-output" id="validate-output-${n}" style="display:none;"><pre class="validate-output-content" id="validate-output-content-${n}"></pre></div>`;return s}function executeValidation(n){const o=document.getElementById(`validate-output-${n}`),c=document.getElementById(`validate-output-content-${n}`),b=document.querySelector(`.validate-button[data-module="${n}"]`);o.style.display='block';c.textContent='';b.disabled=true;b.textContent='⏳ Validating...';const e=new EventSource(`/stream/validate/${n}`);e.onmessage=function(d){if(d.data==='__DONE__'){e.close();b.disabled=false;b.textContent='✓ Validate Module';return}try{const l=JSON.parse(d.data);c.textContent+=l}catch(x){c.textContent+=d.data+'\n'}o.scrollTop=o.scrollHeight};e.onerror=function(){console.error('SSE Error');e.close();b.disabled=false;b.textContent='✓ Validate Module';c.textContent+='\n❌ Connection closed\n'};}document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.validate-button-placeholder').forEach(p=>{const m=p.getAttribute('data-module'),s=createValidateSection(m);p.replaceWith(s)});document.querySelectorAll('.validate-button').forEach(b=>{b.addEventListener('click',function(){executeValidation(this.getAttribute('data-module'))})})})})();
+</script>
+++++

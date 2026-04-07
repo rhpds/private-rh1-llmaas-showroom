@@ -1,41 +1,5 @@
 ---
-type: zero-touch
+type: showroom
 
 default_width: 30
 persist_url_state: true
-view_switcher:
-  enabled: true
-  default_mode: content
-
-antora:
-  name: modules
-  dir: www
-  modules:
-    - name: index
-      label: "Introduction"
-    - name: module-02-model
-      label: "Module 2: Deploying Your First Model"
-      scripts: [solve, validation]
-      solveButton: true
-    - name: module-03-code
-      label: "Module 3: AI-Assisted Development"
-      scripts: [solve, validation]
-      solveButton: true
-    - name: module-04-code
-      label: "Module 4: Game Time"
-      scripts: [solve, validation]
-      solveButton: true
-    - name: module-05-agentic
-      label: "Module 5: Agentic AI"
-      scripts: [solve, validation]
-      solveButton: true
-    - name: module-06-analytics
-      label: "Module 6: Usage Analytics"
-      scripts: [solve, validation]
-      solveButton: true
-    - name: module-07-closing
-      label: "Module 7: Closing Summary"
-    - name: module-08-resources
-      label: "Module 8: Resources"
-
-skipModuleEnabled: true

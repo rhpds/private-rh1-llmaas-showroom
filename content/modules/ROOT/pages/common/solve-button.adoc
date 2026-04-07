@@ -1,0 +1,20 @@
+// Solve Button Component - CSS and JavaScript only
+// Add placeholder in module files: <div class="solve-button-placeholder" data-module="module-name"></div>
+
+[pass,subs="attributes"]
+++++
+<style>
+.solve-section {margin: 2rem 0; padding: 1.5rem; background: #f8f9fa; border: 2px solid #dee2e6; border-radius: 8px;}
+.solve-controls {margin-bottom: 1rem;}
+.solve-button {padding: 0.75rem 1.5rem; font-size: 1rem; font-weight: 600; border: none; border-radius: 6px; cursor: pointer; transition: all 0.3s ease; background: #28a745; color: white;}
+.solve-button:hover:not(:disabled) {background: #218838; transform: translateY(-2px); box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);}
+.solve-button:disabled {background: #adb5bd; cursor: not-allowed; animation: pulse 1.5s ease-in-out infinite;}
+.solve-output {margin-top: 1rem; background-color: #000 !important; border-radius: 6px; padding: 1.5rem; max-height: 600px; overflow-y: auto; border: 2px solid #00ff00; box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);}
+.solve-output-content {margin: 0 !important; padding: 0 !important; color: #00ff00 !important; background: transparent !important; font-family: 'Courier New', 'Courier', monospace; font-size: 14px; line-height: 1.8; white-space: pre-wrap; word-wrap: break-word; font-weight: 500;}
+@keyframes pulse {0%, 100% {opacity: 1;} 50% {opacity: 0.5;}}
+</style>
+
+<script>
+(function(){if(typeof window.solveButtonInit!=='undefined')return;window.solveButtonInit=true;function createSolveSection(n){const s=document.createElement('div');s.className='solve-section';s.innerHTML=`<div class="solve-controls"><button class="solve-button" data-module="${n}">🚀 Solve Module</button></div><div class="solve-output" id="solve-output-${n}" style="display:none;"><pre class="solve-output-content" id="solve-output-content-${n}"></pre></div>`;return s}function executePlaybook(n){const o=document.getElementById(`solve-output-${n}`),c=document.getElementById(`solve-output-content-${n}`),b=document.querySelector(`.solve-button[data-module="${n}"]`);o.style.display='block';c.textContent='';b.disabled=true;b.textContent='⏳ Running...';const e=new EventSource(`/stream/solve/${n}`);e.onmessage=function(d){console.log('Received:',d.data);if(d.data==='__DONE__'){console.log('Got DONE signal, closing');e.close();b.disabled=false;b.textContent='🚀 Solve Module';return}try{const l=JSON.parse(d.data);c.textContent+=l}catch(x){c.textContent+=d.data+'\n'}o.scrollTop=o.scrollHeight};e.onerror=function(){console.error('SSE Error');e.close();b.disabled=false;b.textContent='🚀 Solve Module';c.textContent+='\n❌ Connection closed\n'};}document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.solve-button-placeholder').forEach(p=>{const m=p.getAttribute('data-module'),s=createSolveSection(m);p.replaceWith(s)});document.querySelectorAll('.solve-button').forEach(b=>{b.addEventListener('click',function(){executePlaybook(this.getAttribute('data-module'))})})})})();
+</script>
+++++
