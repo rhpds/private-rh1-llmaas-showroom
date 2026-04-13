@@ -48,6 +48,7 @@
     # -------------------------------------------------------
     - name: Check lsd-genai-playground pod in student namespace
       kubernetes.core.k8s_info:
+        kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
         kind: Pod
         namespace: "{{ student_user }}"
         label_selectors:

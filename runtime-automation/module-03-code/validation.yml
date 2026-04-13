@@ -66,6 +66,7 @@
     # -------------------------------------------------------
     - name: Check Task 4 — DevSpaces workspace pod running
       kubernetes.core.k8s_info:
+        kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
         kind: Pod
         namespace: "wksp-{{ student_user }}"
         label_selectors: []

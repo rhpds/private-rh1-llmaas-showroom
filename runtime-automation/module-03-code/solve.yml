@@ -87,6 +87,7 @@
     # -------------------------------------------------------
     - name: Check DevSpaces workspace pod in student namespace
       kubernetes.core.k8s_info:
+        kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
         kind: Pod
         namespace: "wksp-{{ student_user }}"
         label_selectors: []
