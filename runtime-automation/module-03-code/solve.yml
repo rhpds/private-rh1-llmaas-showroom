@@ -34,7 +34,7 @@
           X-MaaS-Username: "{{ student_user }}"
           X-MaaS-Group: "{{ student_groups | to_json }}"
         return_content: true
-                validate_certs: false
+        validate_certs: false
         timeout: 10
       register: r_existing_keys
       ignore_errors: true
@@ -51,7 +51,7 @@
         body:
           name: "{{ student_user }}-token"
         return_content: true
-                validate_certs: false
+        validate_certs: false
         timeout: 10
       register: r_generated_token
       when: >
