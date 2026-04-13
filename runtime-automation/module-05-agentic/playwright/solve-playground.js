@@ -73,37 +73,43 @@ const WORKSPACE_PROJECT = `Workspace ${USER_NS}`;
     await page.waitForTimeout(2000);
 
     // ── 5. Change project to student workspace ────────────────────────────────
-    // The project dropdown has a search box — search by user namespace to find it
-    console.log('Changing project to workspace for user:', USER_NS);
-    const projectBtn = page.locator('[data-testid="project-selector-dropdown"], .pf-v5-c-select__toggle, .pf-c-select__toggle').first()
-      .or(page.getByRole('button', { name: /grafana|Project/i }).first());
-    if (await projectBtn.isVisible({ timeout: 5000 }).catch(() => false)) {
+    // The project dropdown is next to the "AI asset endpoints" title — starts with "grafana"
+    console.log('Changing project for user:', USER_NS);
+    // Click the project toggle button (initially shows "grafana")
+    const projectBtn = page.locator('button').filter({ hasText: /^grafana$|^Workspace/i }).first();
+    if (await projectBtn.isVisible({ timeout: 8000 }).catch(() => false)) {
+      console.log('Found project dropdown, clicking...');
       await projectBtn.click();
-      await page.waitForTimeout(500);
-      // Type in search box to filter — search by user part of namespace
+      await page.waitForTimeout(800);
+
+      // Search box appears — type user ID to filter
       const searchBox = page.getByPlaceholder(/Project name/i)
-        .or(page.locator('input[type="search"]').first());
+        .or(page.locator('input[placeholder*="roject"]').first());
       if (await searchBox.isVisible({ timeout: 3000 }).catch(() => false)) {
         await searchBox.fill(USER_NS);
-        await page.waitForTimeout(500);
+        await page.waitForTimeout(600);
       }
-      // Click the first matching option (Workspace <user>)
-      const option = page.getByRole('option').first()
-        .or(page.locator('.pf-v5-c-menu__item, .pf-c-select__menu-item').first());
-      if (await option.isVisible({ timeout: 5000 }).catch(() => false)) {
-        await option.click();
-        await page.waitForTimeout(1500);
-        console.log('Project changed');
+
+      // Click first visible option
+      const firstOption = page.locator('li[role="option"] button, [role="option"]').first();
+      if (await firstOption.isVisible({ timeout: 5000 }).catch(() => false)) {
+        const optText = await firstOption.textContent().catch(() => '');
+        console.log('Selecting project option:', optText.trim().substring(0, 40));
+        await firstOption.click();
+        await page.waitForTimeout(2000);
       }
+    } else {
+      console.log('WARNING: Project dropdown not found — continuing with current project');
     }
 
     // ── 6. Click "MCP servers" tab ────────────────────────────────────────────
     console.log('Clicking MCP servers tab...');
-    await page.getByRole('tab', { name: /MCP servers/i })
-      .or(page.getByText('MCP servers').first())
-      .first()
-      .click();
-    await page.waitForTimeout(1500);
+    const mcpTab = page.getByRole('tab', { name: 'MCP servers' })
+      .or(page.locator('button[role="tab"]:has-text("MCP servers")'));
+    await mcpTab.waitFor({ state: 'visible', timeout: 10000 });
+    await mcpTab.click();
+    await page.waitForTimeout(2000);
+    console.log('MCP servers tab active');
 
     // ── 7. Select both MCP server checkboxes ─────────────────────────────────
     console.log('Selecting all MCP servers...');
