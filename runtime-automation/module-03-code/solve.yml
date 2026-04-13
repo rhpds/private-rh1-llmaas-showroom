@@ -9,6 +9,8 @@
     model_internal_url: "https://qwen3-4b-instruct-kserve-workload-svc.llm.svc.cluster.local:8000"
     student_groups:
       - "tier-enterprise-users"
+    ingress_domain: "{{ openshift_cluster_ingress_domain | default('') }}"
+    maas_gateway_url: "https://data-science-gateway.{{ ingress_domain }}/llm/qwen3-4b-instruct/v1"
   tasks:
     # -------------------------------------------------------
     # Task 1 — Verify model endpoint is reachable (prerequisite)
@@ -24,9 +26,9 @@
       ignore_errors: true
 
     # -------------------------------------------------------
-    # Task 2 — Ensure user has an API key from MaaS
+    # Task 2 — Revoke existing token and issue a fresh one (need token value for config.yaml)
     # -------------------------------------------------------
-    - name: Check if API key already exists for user
+    - name: Check existing API keys
       ansible.builtin.uri:
         url: "{{ maas_api_url }}/v1/api-keys"
         method: GET
@@ -39,7 +41,20 @@
       register: r_existing_keys
       ignore_errors: true
 
-    - name: Generate API token for user (if none exists)
+    - name: Revoke existing token (need fresh token value for config.yaml)
+      ansible.builtin.uri:
+        url: "{{ maas_api_url }}/v1/api-keys/{{ r_existing_keys.json[0].jti }}"
+        method: DELETE
+        headers:
+          X-MaaS-Username: "{{ student_user }}"
+          X-MaaS-Group: "{{ student_groups | to_json }}"
+        validate_certs: false
+        timeout: 10
+        status_code: [200, 204]
+      when: r_existing_keys.json | default([]) | length > 0
+      ignore_errors: true
+
+    - name: Generate fresh API token
       ansible.builtin.uri:
         url: "{{ maas_api_url }}/v1/api-keys"
         method: POST
@@ -54,11 +69,13 @@
         return_content: true
         validate_certs: false
         timeout: 10
-      register: r_generated_token
-      when: >
-        r_existing_keys.status | default(0) == 200 and
-        (r_existing_keys.json | default([]) | length == 0)
+      register: r_new_token
       ignore_errors: true
+
+    - name: Set API token fact
+      ansible.builtin.set_fact:
+        maas_token: "{{ r_new_token.json.token | default('') }}"
+      when: r_new_token.json is defined and r_new_token.json.token is defined
 
     # -------------------------------------------------------
     # Task 3 — Test chat completion via internal model endpoint
@@ -83,15 +100,60 @@
       ignore_errors: true
 
     # -------------------------------------------------------
-    # Task 4 — Check DevSpaces workspace pod is running
+    # Task 4 — Find DevSpaces workspace pod
     # -------------------------------------------------------
-    - name: Check DevSpaces workspace pod in student namespace
+    - name: Find DevSpaces workspace pod in student namespace
       kubernetes.core.k8s_info:
         kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
         kind: Pod
         namespace: "wksp-{{ student_user }}"
-        label_selectors: []
       register: r_workspace_pods
+      ignore_errors: true
+
+    - name: Set workspace pod name
+      ansible.builtin.set_fact:
+        workspace_pod: "{{ (r_workspace_pods.resources | selectattr('status.phase', 'equalto', 'Running') | list | first).metadata.name }}"
+      when: r_workspace_pods.resources | default([]) | selectattr('status.phase', 'equalto', 'Running') | list | length > 0
+      ignore_errors: true
+
+    # -------------------------------------------------------
+    # Task 5 — Write ~/.continue/config.yaml into DevSpaces workspace
+    # -------------------------------------------------------
+    - name: Build config.yaml content
+      ansible.builtin.set_fact:
+        continue_config: |
+          name: Local Assistant
+          version: 1.0.0
+          schema: v1
+          models:
+            - name: Qwen3-4B-Instruct
+              provider: openai
+              model: "qwen3-4b-instruct"
+              apiBase: "{{ maas_gateway_url }}"
+              apiKey: "{{ maas_token | default('') }}"
+          context:
+            - provider: code
+            - provider: docs
+            - provider: diff
+            - provider: terminal
+            - provider: problems
+            - provider: folder
+            - provider: codebase
+      when: maas_token is defined and maas_token | length > 0
+
+    - name: Write ~/.continue/config.yaml into DevSpaces workspace pod
+      kubernetes.core.k8s_exec:
+        kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
+        namespace: "wksp-{{ student_user }}"
+        pod: "{{ workspace_pod }}"
+        command:
+          - sh
+          - -c
+          - "mkdir -p /home/user/.continue && echo {{ continue_config | b64encode }} | base64 -d > /home/user/.continue/config.yaml && echo 'config.yaml written'"
+      register: r_config_write
+      when:
+        - workspace_pod is defined
+        - continue_config is defined
       ignore_errors: true
 
     # -------------------------------------------------------
@@ -101,7 +163,8 @@
       ansible.builtin.debug:
         msg: |
           Model endpoint: {{ 'reachable' if r_model_endpoint.status | default(0) == 200 else 'NOT reachable' }}
-          API key: {{ 'exists' if (r_existing_keys.json | default([]) | length > 0) else ('generated' if r_generated_token.status | default(0) in [200, 201] else 'not found — generate from Gen AI Studio → AI asset endpoints → Models as a service → View → Generate API token') }}
-          Chat completion test: {{ 'passed' if r_chat_test.status | default(0) == 200 else 'failed' }}
-          DevSpaces workspace: {{ 'running' if (r_workspace_pods.resources | default([]) | selectattr('status.phase', 'equalto', 'Running') | list | length > 0) else 'not found in wksp-' + student_user }}
-
+          API token: {{ 'generated' if r_new_token.status | default(0) in [200, 201] else 'generation failed' }}
+          Chat completion: {{ 'passed' if r_chat_test.status | default(0) == 200 else 'failed' }}
+          DevSpaces workspace: {{ workspace_pod | default('not found') }}
+          config.yaml: {{ 'written to ' + workspace_pod if (r_config_write is defined and r_config_write is not failed) else 'not written' }}
+          apiBase: {{ maas_gateway_url }}
