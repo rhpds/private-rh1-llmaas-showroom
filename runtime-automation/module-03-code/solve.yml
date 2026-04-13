@@ -43,7 +43,7 @@
 
     - name: Revoke existing token (need fresh token value for config.yaml)
       ansible.builtin.uri:
-        url: "{{ maas_api_url }}/v1/api-keys/{{ r_existing_keys.json[0].jti }}"
+        url: "{{ maas_api_url }}/v1/api-keys/{{ r_existing_keys.json[0].jti | default(r_existing_keys.json[0].name) }}"
         method: DELETE
         headers:
           X-MaaS-Username: "{{ student_user }}"
@@ -141,10 +141,6 @@
             - provider: codebase
       when: maas_token is defined and maas_token | length > 0
 
-    - name: Debug — show workspace and config status
-      ansible.builtin.debug:
-        msg: "workspace_pod={{ workspace_pod | default('UNDEFINED') }} continue_config_len={{ continue_config | default('') | length }} maas_token_len={{ maas_token | default('') | length }}"
-
     - name: Write ~/.continue/config.yaml into DevSpaces workspace pod
       kubernetes.core.k8s_exec:
         kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
@@ -156,11 +152,6 @@
         - workspace_pod is defined
         - continue_config is defined
       ignore_errors: true
-
-    - name: Debug — config write result
-      ansible.builtin.debug:
-        msg: "k8s_exec rc={{ r_config_write.return_code | default('N/A') }} stdout={{ r_config_write.stdout | default('N/A') }} stderr={{ r_config_write.stderr | default('N/A') }}"
-      when: r_config_write is defined
 
     # -------------------------------------------------------
     # Report
