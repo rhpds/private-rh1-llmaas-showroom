@@ -5,7 +5,7 @@
   gather_facts: false
   vars:
     student_user: "{{ user | default('') }}"
-    maas_api_url: "http://maas-api.maas-api.svc.cluster.local:8080"
+    maas_api_url: "https://maas-api.redhat-ods-applications.svc.cluster.local:8443"
     model_internal_url: "https://qwen3-4b-instruct-kserve-workload-svc.llm.svc.cluster.local:8000"
     student_groups:
       - "tier-enterprise-users"
@@ -34,6 +34,7 @@
           X-MaaS-Username: "{{ student_user }}"
           X-MaaS-Group: "{{ student_groups | to_json }}"
         return_content: true
+                validate_certs: false
         timeout: 10
       register: r_api_keys
       ignore_errors: true

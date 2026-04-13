@@ -6,7 +6,6 @@
   vars:
     student_user: "{{ user | default('') }}"
     model_internal_url: "https://qwen3-4b-instruct-kserve-workload-svc.llm.svc.cluster.local:8000"
-    llamastack_namespace: "llamastack-{{ student_user }}"
   tasks:
     # -------------------------------------------------------
     # Task 1 — Verify model endpoint is reachable
@@ -23,11 +22,11 @@
 
     # -------------------------------------------------------
     # Task 2 — Check OCP MCP server (TCP — SSE endpoints stream forever)
-    #   Namespace: llamastack-{{ user }} (per-student namespace)
+    #   Shared namespace: lls-demo (all students share these MCP servers)
     # -------------------------------------------------------
     - name: Check OCP MCP server is reachable
       ansible.builtin.wait_for:
-        host: "ocp-mcp-server.{{ llamastack_namespace }}.svc.cluster.local"
+        host: "ocp-mcp-server.lls-demo.svc.cluster.local"
         port: 8080
         timeout: 5
       register: r_ocp_mcp
@@ -38,7 +37,7 @@
     # -------------------------------------------------------
     - name: Check Slack MCP server is reachable
       ansible.builtin.wait_for:
-        host: "slack-mcp-server.{{ llamastack_namespace }}.svc.cluster.local"
+        host: "slack-mcp-server.lls-demo.svc.cluster.local"
         port: 80
         timeout: 5
       register: r_slack_mcp
@@ -48,5 +47,5 @@
       ansible.builtin.debug:
         msg: |
           Model endpoint: {{ 'reachable' if r_model_endpoint.status | default(0) == 200 else 'NOT reachable' }}
-          OCP MCP server ({{ llamastack_namespace }}): {{ 'reachable' if r_ocp_mcp is not failed else 'NOT reachable' }}
-          Slack MCP server ({{ llamastack_namespace }}): {{ 'reachable' if r_slack_mcp is not failed else 'NOT reachable' }}
+          OCP MCP server (lls-demo): {{ 'reachable' if r_ocp_mcp is not failed else 'NOT reachable' }}
+          Slack MCP server (lls-demo): {{ 'reachable' if r_slack_mcp is not failed else 'NOT reachable' }}

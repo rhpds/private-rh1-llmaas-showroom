@@ -6,7 +6,7 @@
   vars:
     student_user: "{{ user | default('') }}"
     grafana_url: "http://grafana-service.grafana.svc.cluster.local:3000"
-    maas_api_url: "http://maas-api.maas-api.svc.cluster.local:8080"
+    maas_api_url: "https://maas-api.redhat-ods-applications.svc.cluster.local:8443"
     student_groups:
       - "tier-enterprise-users"
   tasks:
@@ -33,6 +33,7 @@
           X-MaaS-Username: "{{ student_user }}"
           X-MaaS-Group: "{{ student_groups | to_json }}"
         return_content: true
+        validate_certs: false
         timeout: 10
       register: r_maas_usage
       ignore_errors: true

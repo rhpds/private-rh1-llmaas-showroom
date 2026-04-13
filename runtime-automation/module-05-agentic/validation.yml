@@ -6,7 +6,6 @@
   vars:
     student_user: "{{ user | default('') }}"
     model_internal_url: "https://qwen3-4b-instruct-kserve-workload-svc.llm.svc.cluster.local:8000"
-    llamastack_namespace: "llamastack-{{ student_user }}"
   tasks:
     # -------------------------------------------------------
     # Check 1 — Model endpoint reachable
@@ -22,23 +21,22 @@
       ignore_errors: true
 
     # -------------------------------------------------------
-    # Check 2 — OCP MCP server reachable (TCP — SSE endpoints stream forever)
-    #   Namespace: llamastack-{{ user }} (per-student namespace)
+    # Check 2 — OCP MCP server (TCP — shared lls-demo namespace)
     # -------------------------------------------------------
     - name: Check Task 2 — OCP MCP server
       ansible.builtin.wait_for:
-        host: "ocp-mcp-server.{{ llamastack_namespace }}.svc.cluster.local"
+        host: "ocp-mcp-server.lls-demo.svc.cluster.local"
         port: 8080
         timeout: 5
       register: r_ocp_mcp
       ignore_errors: true
 
     # -------------------------------------------------------
-    # Check 3 — Slack MCP server reachable (TCP)
+    # Check 3 — Slack MCP server (TCP)
     # -------------------------------------------------------
     - name: Check Task 3 — Slack MCP server
       ansible.builtin.wait_for:
-        host: "slack-mcp-server.{{ llamastack_namespace }}.svc.cluster.local"
+        host: "slack-mcp-server.lls-demo.svc.cluster.local"
         port: 80
         timeout: 5
       register: r_slack_mcp
@@ -58,9 +56,9 @@
         check: "{{ _task1_ok and _task2_ok and _task3_ok }}"
         pass_msg: |
           ✅ Task 1: Model endpoint qwen3-4b-instruct is reachable
-          ✅ Task 2: OCP MCP server is reachable ({{ llamastack_namespace }})
-          ✅ Task 3: Slack MCP server is reachable ({{ llamastack_namespace }})
+          ✅ Task 2: OCP MCP server is reachable (lls-demo)
+          ✅ Task 3: Slack MCP server is reachable (lls-demo)
         error_msg: |
           {{ '✅' if _task1_ok else '❌' }} Task 1: Model endpoint qwen3-4b-instruct {{ 'is reachable' if _task1_ok else 'is NOT reachable — contact cluster admin' }}
-          {{ '✅' if _task2_ok else '❌' }} Task 2: OCP MCP server {{ 'is reachable' if _task2_ok else 'is NOT reachable in ' + llamastack_namespace + ' — contact cluster admin' }}
-          {{ '✅' if _task3_ok else '❌' }} Task 3: Slack MCP server {{ 'is reachable' if _task3_ok else 'is NOT reachable in ' + llamastack_namespace + ' — contact cluster admin' }}
+          {{ '✅' if _task2_ok else '❌' }} Task 2: OCP MCP server {{ 'is reachable' if _task2_ok else 'is NOT reachable in lls-demo — contact cluster admin' }}
+          {{ '✅' if _task3_ok else '❌' }} Task 3: Slack MCP server {{ 'is reachable' if _task3_ok else 'is NOT reachable in lls-demo — contact cluster admin' }}
