@@ -56,6 +56,22 @@
       register: r_playground_pod
       ignore_errors: true
 
+    # -------------------------------------------------------
+    # Task 5 — Playwright: navigate RHOAI playground, authorize MCP servers, send chat
+    # -------------------------------------------------------
+    - name: Run Playwright — RHOAI playground chat interactions
+      ansible.builtin.script:
+        executable: node
+        cmd: "{{ playbook_dir }}/playwright/solve-playground.js"
+      environment:
+        RHOAI_URL: "https://data-science-gateway.{{ openshift_cluster_ingress_domain | default('') }}"
+        USERNAME: "{{ student_user }}"
+        PASSWORD: "{{ password | default('') }}"
+        USER_NS: "{{ student_user }}"
+        PLAYWRIGHT_BROWSERS_PATH: /app/.playwright
+      register: r_playwright
+      ignore_errors: true
+
     - name: Report solve status
       ansible.builtin.debug:
         msg: |
@@ -63,3 +79,4 @@
           OCP MCP server (lls-demo): {{ 'reachable' if r_ocp_mcp is not failed else 'NOT reachable' }}
           Slack MCP server (lls-demo): {{ 'reachable' if r_slack_mcp is not failed else 'NOT reachable' }}
           Llama Stack playground ({{ student_user }}): {{ 'running' if (r_playground_pod.resources | default([]) | selectattr('status.phase', 'equalto', 'Running') | list | length > 0) else 'not found' }}
+          Playground chat (Playwright): {{ 'completed' if r_playwright.rc | default(1) == 0 else 'failed — ' + (r_playwright.stderr | default('') | truncate(100)) }}

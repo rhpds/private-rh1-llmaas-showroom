@@ -38,9 +38,25 @@
       register: r_maas_usage
       ignore_errors: true
 
+    # -------------------------------------------------------
+    # Task 3 — Playwright: open Grafana MaaS Token Metrics Dashboard
+    # -------------------------------------------------------
+    - name: Run Playwright — open Grafana dashboard
+      ansible.builtin.script:
+        executable: node
+        cmd: "{{ playbook_dir }}/playwright/solve-grafana.js"
+      environment:
+        GRAFANA_URL: "https://grafana-route-grafana.{{ openshift_cluster_ingress_domain | default('') }}"
+        USERNAME: "{{ student_user }}"
+        PASSWORD: "{{ password | default('') }}"
+        PLAYWRIGHT_BROWSERS_PATH: /app/.playwright
+      register: r_playwright
+      ignore_errors: true
+
     - name: Report solve status
       ansible.builtin.debug:
         msg: |
           Grafana: {{ 'reachable' if r_grafana.status | default(0) == 200 else 'NOT reachable' }}
           MaaS API (user data): {{ 'available' if r_maas_usage.status | default(0) == 200 else 'NOT available' }}
+          Grafana dashboard (Playwright): {{ 'opened' if r_playwright.rc | default(1) == 0 else 'failed — ' + (r_playwright.stderr | default('') | truncate(100)) }}
 
