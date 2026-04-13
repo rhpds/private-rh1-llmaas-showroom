@@ -90,26 +90,32 @@ const WORKSPACE_PROJECT = `Workspace ${USER_NS}`;
         await page.waitForTimeout(600);
       }
 
+      // Clear search and type "workspace" to filter to workspace projects
+      if (await searchBox.isVisible({ timeout: 2000 }).catch(() => false)) {
+        await searchBox.clear();
+        await searchBox.fill('workspace');
+        await page.waitForTimeout(600);
+      }
+
+      // Find all options and log them for debugging
+      const allOptions = await page.locator('li[role="option"], [role="option"]').all();
+      console.log('Available project options:');
+      for (const opt of allOptions) {
+        const txt = await opt.textContent().catch(() => '');
+        if (txt.trim()) console.log(' -', txt.trim().substring(0, 60));
+      }
+
       // Click the Workspace option (not grafana)
-      const workspaceOption = page.locator('li[role="option"] button, [role="option"]')
+      const workspaceOption = page.locator('li[role="option"], [role="option"]')
         .filter({ hasText: /[Ww]orkspace/i })
         .first();
       if (await workspaceOption.isVisible({ timeout: 5000 }).catch(() => false)) {
         const optText = await workspaceOption.textContent().catch(() => '');
-        console.log('Selecting project option:', optText.trim().substring(0, 60));
+        console.log('Selecting project:', optText.trim().substring(0, 60));
         await workspaceOption.click();
         await page.waitForTimeout(2000);
       } else {
-        // Fallback: click option that matches user namespace
-        const nsOption = page.locator('li[role="option"] button, [role="option"]')
-          .filter({ hasText: new RegExp(USER_NS, 'i') })
-          .first();
-        if (await nsOption.isVisible({ timeout: 3000 }).catch(() => false)) {
-          await nsOption.click();
-          await page.waitForTimeout(2000);
-        } else {
-          console.log('WARNING: Workspace project option not found');
-        }
+        console.log('WARNING: Workspace project option not found');
       }
     } else {
       console.log('WARNING: Project dropdown not found — continuing with current project');
