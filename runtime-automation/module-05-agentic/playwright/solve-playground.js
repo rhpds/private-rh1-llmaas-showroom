@@ -90,13 +90,26 @@ const WORKSPACE_PROJECT = `Workspace ${USER_NS}`;
         await page.waitForTimeout(600);
       }
 
-      // Click first visible option
-      const firstOption = page.locator('li[role="option"] button, [role="option"]').first();
-      if (await firstOption.isVisible({ timeout: 5000 }).catch(() => false)) {
-        const optText = await firstOption.textContent().catch(() => '');
-        console.log('Selecting project option:', optText.trim().substring(0, 40));
-        await firstOption.click();
+      // Click the Workspace option (not grafana)
+      const workspaceOption = page.locator('li[role="option"] button, [role="option"]')
+        .filter({ hasText: /[Ww]orkspace/i })
+        .first();
+      if (await workspaceOption.isVisible({ timeout: 5000 }).catch(() => false)) {
+        const optText = await workspaceOption.textContent().catch(() => '');
+        console.log('Selecting project option:', optText.trim().substring(0, 60));
+        await workspaceOption.click();
         await page.waitForTimeout(2000);
+      } else {
+        // Fallback: click option that matches user namespace
+        const nsOption = page.locator('li[role="option"] button, [role="option"]')
+          .filter({ hasText: new RegExp(USER_NS, 'i') })
+          .first();
+        if (await nsOption.isVisible({ timeout: 3000 }).catch(() => false)) {
+          await nsOption.click();
+          await page.waitForTimeout(2000);
+        } else {
+          console.log('WARNING: Workspace project option not found');
+        }
       }
     } else {
       console.log('WARNING: Project dropdown not found — continuing with current project');
@@ -184,7 +197,7 @@ const WORKSPACE_PROJECT = `Workspace ${USER_NS}`;
     await page.waitForTimeout(1000);
 
     // ── 10. Send chat messages ─────────────────────────────────────────────────
-    const chatInput = page.locator('[placeholder*="message"], [placeholder*="Message"], textarea').first();
+    const chatInput = page.locator('[placeholder="Send a message..."], [placeholder*="message"], textarea').first();
     await chatInput.waitFor({ state: 'visible', timeout: 10000 });
 
     const messages = [
