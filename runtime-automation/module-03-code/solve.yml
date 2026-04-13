@@ -89,4 +89,3 @@
           API key: {{ 'exists' if (r_existing_keys.json | default([]) | length > 0) else ('generated' if r_generated_token.status | default(0) == 200 else 'not found — generate from Gen AI Studio → AI asset endpoints → Models as a service → View → Generate API token') }}
           Chat completion test: {{ 'passed' if r_chat_test.status | default(0) == 200 else 'failed' }}
 
-          Follow the lab instructions to open DevSpaces, install Continue, and configure config.yaml with your MaaS endpoint and API key.

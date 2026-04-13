@@ -52,15 +52,5 @@
       ansible.builtin.debug:
         msg: |
           Model endpoint: {{ 'reachable' if r_model_endpoint.status | default(0) == 200 else 'NOT reachable' }}
-          Llama Stack playground: verify manually (runner cannot reach cross-namespace service)
           OCP MCP server: {{ 'reachable' if r_ocp_mcp is not failed else 'NOT reachable' }}
           Slack MCP server: {{ 'reachable' if r_slack_mcp is not failed else 'NOT reachable' }}
-
-          ⚠️ MANUAL STEPS REQUIRED — this module uses the RHOAI Playground:
-            1. Go to OpenShift AI → Gen AI Studio → AI asset endpoints
-            2. Change project to your Workspace namespace
-            3. Select MCP servers and click "Try in Playground"
-            4. Authorize both MCP servers (click lock icons)
-            5. Chat: "List all pods in the wksp-{{ student_user }} namespace"
-            6. Chat: "List all Slack channels in our Slack workspace"
-            7. Chat: "Post a message to the #rh1-2026 channel"

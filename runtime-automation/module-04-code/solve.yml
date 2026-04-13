@@ -47,8 +47,3 @@
           Model endpoint: {{ 'reachable' if r_model_endpoint.status | default(0) == 200 else 'NOT reachable' }}
           Chat completion: {{ 'working' if r_chat_test.status | default(0) == 200 else 'failed' }}
 
-          ⚠️ MANUAL STEPS REQUIRED — this module is entirely browser-based:
-            1. In DevSpaces, open a game starter file from fun-and-games/game_starters/
-            2. Use Continue to build the game (highlight code → right-click → Continue)
-            3. Open a terminal (Ctrl+`) and run your game
-            4. Solutions available at fun-and-games/game_solutions/ if stuck

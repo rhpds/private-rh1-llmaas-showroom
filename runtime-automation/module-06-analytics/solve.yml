@@ -43,4 +43,3 @@
           Grafana: {{ 'reachable' if r_grafana.status | default(0) == 200 else 'NOT reachable' }}
           MaaS API (user data): {{ 'available' if r_maas_usage.status | default(0) == 200 else 'NOT available' }}
 
-          Follow the lab instructions to open Grafana from your cluster's navigation menu and view the MaaS Token Metrics Dashboard.
