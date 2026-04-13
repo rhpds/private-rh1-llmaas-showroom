@@ -128,9 +128,35 @@ const WORKSPACE_PROJECT = `Workspace ${USER_NS}`;
 
     // ── 8. Click "Try in Playground" button ───────────────────────────────────
     console.log('Clicking Try in Playground...');
-    const tryBtn = page.getByRole('button', { name: /Try in Playground/i });
-    await tryBtn.waitFor({ state: 'visible', timeout: 10000 });
-    await tryBtn.click();
+    // Screenshot to debug what state the page is in
+    await page.screenshot({ path: '/tmp/playwright-before-playground-btn.png' });
+    console.log('Page URL:', page.url());
+
+    // The button shows "Try in Playground (N)" after selecting checkboxes
+    const tryBtn = page.getByRole('button', { name: /Try in Playground/i })
+      .or(page.locator('button:has-text("Playground")'))
+      .or(page.locator('[data-testid*="playground"], [aria-label*="Playground"]').first());
+
+    if (await tryBtn.isVisible({ timeout: 5000 }).catch(() => false)) {
+      await tryBtn.first().click();
+    } else {
+      // Try scanning all buttons on the page for playground-related text
+      const allButtons = await page.getByRole('button').all();
+      let clicked = false;
+      for (const btn of allButtons) {
+        const txt = await btn.textContent().catch(() => '');
+        if (txt && /playground/i.test(txt)) {
+          console.log('Found playground button:', txt.trim());
+          await btn.click();
+          clicked = true;
+          break;
+        }
+      }
+      if (!clicked) {
+        await page.screenshot({ path: '/tmp/playwright-no-playground-btn.png' });
+        throw new Error('Try in Playground button not found — check screenshot');
+      }
+    }
     await page.waitForTimeout(4000);
 
     // ── 9. Authorize both MCP servers (click lock icons) ─────────────────────
