@@ -150,10 +150,7 @@
         kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
         namespace: "wksp-{{ student_user }}"
         pod: "{{ workspace_pod }}"
-        command:
-          - python3
-          - -c
-          - "import base64,os; os.makedirs('/home/user/.continue',exist_ok=True); open('/home/user/.continue/config.yaml','w').write(base64.b64decode('{{ continue_config | b64encode }}').decode()); print('written')"
+        command: "python3 -c \"import base64,os; os.makedirs('/home/user/.continue',exist_ok=True); open('/home/user/.continue/config.yaml','w').write(base64.b64decode('{{ continue_config | b64encode }}').decode()); print('written')\""
       register: r_config_write
       when:
         - workspace_pod is defined
