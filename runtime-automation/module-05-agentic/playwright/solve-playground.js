@@ -48,9 +48,9 @@ if (!RHOAI_URL || !USERNAME || !PASSWORD || !USER_NS) {
         await page.waitForLoadState('domcontentloaded');
       }
 
-      await page.getByLabel('Username').fill(USERNAME);
-      await page.getByLabel('Password').fill(PASSWORD);
-      await page.getByRole('button', { name: /log in/i }).click();
+      await page.getByLabel('Username').first().fill(USERNAME);
+      await page.getByLabel('Password').first().fill(PASSWORD);
+      await page.getByRole('button', { name: /log in/i }).first().click();
       await page.waitForURL(/data-science-gateway/, { timeout: 30000 });
       console.log('Logged in successfully');
     }
