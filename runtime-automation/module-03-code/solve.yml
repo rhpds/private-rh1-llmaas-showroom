@@ -117,7 +117,33 @@
       ignore_errors: true
 
     # -------------------------------------------------------
-    # Task 5 — Write ~/.continue/config.yaml into DevSpaces workspace
+    # Task 5 — Install Continue extension via Open VSX VSIX
+    # -------------------------------------------------------
+    - name: Install Continue — download linux-x64 VSIX from Open VSX
+      kubernetes.core.k8s_exec:
+        kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
+        namespace: "wksp-{{ student_user }}"
+        pod: "{{ workspace_pod }}"
+        command: "sh -c 'ls /checode/checode-linux-libc/ubi9/extensions/Continue.continue 2>/dev/null && echo already_installed || (curl -skL https://open-vsx.org/api/Continue/continue/linux-x64/1.3.38/file/Continue.continue-1.3.38@linux-x64.vsix -o /tmp/continue.vsix && echo downloaded)'"
+      register: r_continue_download
+      when: workspace_pod is defined
+      ignore_errors: true
+
+    - name: Install Continue — extract VSIX to extensions directory
+      kubernetes.core.k8s_exec:
+        kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
+        namespace: "wksp-{{ student_user }}"
+        pod: "{{ workspace_pod }}"
+        command: "sh -c 'rm -rf /tmp/continue-ext && unzip -q /tmp/continue.vsix -d /tmp/continue-ext && mv /tmp/continue-ext/extension /checode/checode-linux-libc/ubi9/extensions/Continue.continue && echo installed'"
+      register: r_continue_install
+      when:
+        - workspace_pod is defined
+        - r_continue_download.stdout is defined
+        - "'downloaded' in r_continue_download.stdout"
+      ignore_errors: true
+
+    # -------------------------------------------------------
+    # Task 6 — Write ~/.continue/config.yaml into DevSpaces workspace
     # -------------------------------------------------------
     - name: Build config.yaml content
       ansible.builtin.set_fact:
@@ -163,5 +189,6 @@
           API token: {{ 'generated' if r_new_token.status | default(0) in [200, 201] else 'generation failed' }}
           Chat completion: {{ 'passed' if r_chat_test.status | default(0) == 200 else 'failed' }}
           DevSpaces workspace: {{ workspace_pod | default('not found') }}
+          Continue extension: {{ 'installed' if (r_continue_install is defined and r_continue_install is not failed) else ('already installed' if (r_continue_download is defined and 'already_installed' in (r_continue_download.stdout | default(''))) else 'not installed') }}
           config.yaml: {{ 'written to ' + workspace_pod if (r_config_write is defined and r_config_write is not failed) else 'not written' }}
           apiBase: {{ maas_gateway_url }}

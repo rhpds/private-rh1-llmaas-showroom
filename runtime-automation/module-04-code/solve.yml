@@ -4,6 +4,7 @@
   connection: local
   gather_facts: false
   vars:
+    student_user: "{{ user | default('') }}"
     model_internal_url: "https://qwen3-4b-instruct-kserve-workload-svc.llm.svc.cluster.local:8000"
   tasks:
     # -------------------------------------------------------
@@ -41,9 +42,41 @@
       register: r_chat_test
       ignore_errors: true
 
+    # -------------------------------------------------------
+    # Task 3 — Find DevSpaces workspace pod
+    # -------------------------------------------------------
+    - name: Find DevSpaces workspace pod
+      kubernetes.core.k8s_info:
+        kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
+        kind: Pod
+        namespace: "wksp-{{ student_user }}"
+      register: r_workspace_pods
+      ignore_errors: true
+
+    - name: Set workspace pod name
+      ansible.builtin.set_fact:
+        workspace_pod: "{{ (r_workspace_pods.resources | default([]) | selectattr('status.phase', 'equalto', 'Running') | list | first).metadata.name }}"
+      when: r_workspace_pods.resources | default([]) | selectattr('status.phase', 'equalto', 'Running') | list | length > 0
+      ignore_errors: true
+
+    # -------------------------------------------------------
+    # Task 4 — Run game solution in DevSpaces workspace
+    # -------------------------------------------------------
+    - name: Run rock-paper-scissors solution in DevSpaces workspace
+      kubernetes.core.k8s_exec:
+        kubeconfig: "{{ k8s_kubeconfig | default(omit) }}"
+        namespace: "wksp-{{ student_user }}"
+        pod: "{{ workspace_pod }}"
+        command: "sh -c 'echo rock | python3 /projects/exercises/fun-and-games/game_solutions/rock_paper_scissors/rps_solution.py'"
+      register: r_game_run
+      when: workspace_pod is defined
+      ignore_errors: true
+
     - name: Report solve status
       ansible.builtin.debug:
         msg: |
           Model endpoint: {{ 'reachable' if r_model_endpoint.status | default(0) == 200 else 'NOT reachable' }}
           Chat completion: {{ 'working' if r_chat_test.status | default(0) == 200 else 'failed' }}
+          DevSpaces workspace: {{ workspace_pod | default('not found') }}
+          Game solution run: {{ 'completed — ' + r_game_run.stdout | default('') | truncate(60) if (r_game_run is defined and r_game_run is not failed) else 'skipped (workspace not found)' }}
 
