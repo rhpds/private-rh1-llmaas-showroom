@@ -167,6 +167,5 @@ In this module, you:
 * Integrated your own LLM with a tool-using agent.
 * Explored OpenShift resources with natural language
 * Interacted with a Slack workspace using natural language
-* Added AI guardrails with input/output shields.
 
 You just used AI to reduce operational complexity and speed up workflows! 
