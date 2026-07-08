@@ -57,7 +57,7 @@ Example [substitute the correct path to your file]
 
 [source,console]
 ----
-cd /home/dev/rhone_code/game_templates/rock_paper_scissors/
+cd /projects/exercises/fun-and-games/game_starters/word_scramble
 ----
 
 Follow the instructions for the right code language:
@@ -109,7 +109,7 @@ Solutions are available here:
 
 [source,console]
 ----
-~/llama-stack-on-ocp/fun-and-games/game_solutions/
+ls /projects/exercises/fun-and-games/game_solutions
 ----
 
 Use the execution instructions in the above sections to run the code for any of the provided game programs!
