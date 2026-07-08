@@ -162,7 +162,7 @@ NOTE: If the container restarts, which will prompt you to have to reload the VSC
 You've now:
 
 * Set up a cloud IDE
-* Installed Continue and configured it to connect to your private Granite model
+* Installed Continue and configured it to connect to your private large language model
 * Set up an AI assistant that can refactor, edit and explain your code!
 
 Next, you will use Continue to help you develop a little fun game. 
